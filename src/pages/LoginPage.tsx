@@ -143,11 +143,6 @@ export function LoginPage() {
               {t('auth.createAccount')}
             </Link>
           </p>
-          {emailValue && (
-            <p className={styles.typingHint}>
-              {t('auth.typingHint')} <code>{emailValue}</code>
-            </p>
-          )}
         </footer>
       </div>
     </div>

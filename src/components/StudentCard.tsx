@@ -6,7 +6,6 @@ import styles from './StudentCard.module.css'
 
 interface BaseProps {
   user: UserSummary
-  meta?: ReactNode
   bottom?: ReactNode
   href?: string
   static?: boolean
@@ -17,7 +16,6 @@ interface BaseProps {
 
 export function StudentCard({
   user,
-  meta,
   bottom,
   href,
   static: isStatic,
@@ -41,7 +39,6 @@ export function StudentCard({
           <div className={styles.name}>{user.displayName}</div>
           <div className={styles.meta}>{user.email}</div>
         </div>
-        {meta && <div className={styles.statusCorner}>{meta}</div>}
       </div>
       {bottom}
       {footer && <div className={styles.footer}>{footer}</div>}

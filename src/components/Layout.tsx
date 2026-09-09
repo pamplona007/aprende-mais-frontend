@@ -26,26 +26,6 @@ export function Layout() {
         <nav className={styles.nav}>
           {currentUser ? (
             <>
-              {currentUser.role === 'TEACHER' && (
-                <NavLink
-                  to={`/teacher/${currentUser.id}`}
-                  className={({ isActive }) =>
-                    `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-                  }
-                >
-                  {t('nav.teacherArea')}
-                </NavLink>
-              )}
-              {currentUser.role === 'STUDENT' && (
-                <NavLink
-                  to={`/student/${currentUser.id}`}
-                  className={({ isActive }) =>
-                    `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-                  }
-                >
-                  {t('nav.studentArea')}
-                </NavLink>
-              )}
               <div className={styles.userBlock}>
                 <Avatar user={currentUser} size="sm" />
                 <div className={styles.userMeta}>

@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getRelationshipsForTeacher, getUserById } from '../mocks'
 import type { TeachingRelationship } from '../types'
-import { StatusPill } from '../components/StatusPill'
 import { Avatar } from '../components/Avatar'
 import { StudentCard } from '../components/StudentCard'
 import { Button } from '../components/Button'
@@ -142,7 +141,6 @@ function RelationshipGrid({
             key={rel.id}
             user={student}
             href={`/teacher/${teacherId}/students/${student.id}`}
-            meta={<StatusPill status={rel.status} />}
             bottom={
               <>
                 <div className={styles.statusMeta}>{meta}</div>
@@ -193,7 +191,6 @@ function PastList({
                   </Link>
                   <div className={styles.pastEmail}>{student.email}</div>
                 </div>
-                <StatusPill status={rel.status} />
               </div>
               <div className={styles.pastReason}>{reason}</div>
             </div>

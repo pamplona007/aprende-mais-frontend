@@ -5,8 +5,6 @@ const ptBR = {
   },
 
   nav: {
-    teacherArea: 'Área do professor',
-    studentArea: 'Área do aluno',
     login: 'Entrar',
     register: 'Cadastrar',
     logout: 'Sair',
