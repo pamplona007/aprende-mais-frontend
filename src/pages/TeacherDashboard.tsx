@@ -10,7 +10,6 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
 import { GridCards } from '../components/GridCards'
-import { Row } from '../components/Row'
 import { Stack } from '../components/Stack'
 import styles from './TeacherDashboard.module.css'
 
@@ -67,26 +66,18 @@ export function TeacherDashboard() {
 
   return (
     <Stack gap="lg">
-      <section className="page-header">
-        <div className="page-header__crumbs">
-          <Link to="/">{t('teacherDashboard.crumbsHome')}</Link> ·{' '}
-          {t('teacherDashboard.crumbsArea')}
+      <header className={styles.header}>
+        <div className={styles.headerMain}>
+          <Avatar user={teacher} size="lg" />
+          <div className={styles.headerText}>
+            <div className={styles.headerName}>{teacher.displayName}</div>
+            <div className={styles.headerEmail}>{teacher.email}</div>
+          </div>
         </div>
-        <Row justify="between">
-          <Row>
-            <Avatar user={teacher} size="lg" />
-            <div>
-              <h1 style={{ margin: 0 }}>{teacher.displayName}</h1>
-              <p className="muted" style={{ margin: 0 }}>
-                {teacher.email}
-              </p>
-            </div>
-          </Row>
-          <Button onClick={() => navigate(`/teacher/${teacher.id}/invite`)}>
-            {t('teacherDashboard.inviteStudent')}
-          </Button>
-        </Row>
-      </section>
+        <Button onClick={() => navigate(`/teacher/${teacher.id}/invite`)}>
+          {t('teacherDashboard.inviteStudent')}
+        </Button>
+      </header>
 
       <nav className={styles.tabs} role="tablist">
         {TAB_DEFS.map((tDef) => (
@@ -98,7 +89,7 @@ export function TeacherDashboard() {
             onClick={() => setTab(tDef.key)}
           >
             {t(`teacherDashboard.tabs.${tDef.labelKey}`)}
-            <span className={styles.tabCount}>({grouped[tDef.key].length})</span>
+            <span className={styles.tabCount}>{grouped[tDef.key].length}</span>
           </button>
         ))}
       </nav>
@@ -151,16 +142,13 @@ function RelationshipGrid({
             key={rel.id}
             user={student}
             href={`/teacher/${teacherId}/students/${student.id}`}
+            meta={<StatusPill status={rel.status} />}
             bottom={
               <>
-                <div className={styles.statusRow}>
-                  <StatusPill status={rel.status} />
-                  <span className="muted tiny">{meta}</span>
-                </div>
+                <div className={styles.statusMeta}>{meta}</div>
                 {rel.message && <div className={styles.relMessage}>{rel.message}</div>}
               </>
             }
-            footer={<span className={styles.viewProfile}>{t('teacherDashboard.viewProfile')}</span>}
           />
         )
       })}
@@ -193,21 +181,22 @@ function PastList({
         const reason = t(`teacherDashboard.pastReasons.${rel.status as PastStatus}`)
         return (
           <Card key={rel.id}>
-            <Row justify="between">
-              <Row>
+            <div className={styles.pastCard}>
+              <div className={styles.pastHeader}>
                 <Avatar user={student} size="sm" />
-                <div>
-                  <Link to={`/teacher/${teacherId}/students/${student.id}`} style={{ color: 'inherit' }}>
-                    <strong>{student.displayName}</strong>
+                <div className={styles.pastInfo}>
+                  <Link
+                    to={`/teacher/${teacherId}/students/${student.id}`}
+                    style={{ color: 'inherit', fontWeight: 500 }}
+                  >
+                    {student.displayName}
                   </Link>
-                  <div className="muted tiny">{student.email}</div>
+                  <div className={styles.pastEmail}>{student.email}</div>
                 </div>
-              </Row>
-              <Row>
                 <StatusPill status={rel.status} />
-                <span className={styles.pastReason}>{reason}</span>
-              </Row>
-            </Row>
+              </div>
+              <div className={styles.pastReason}>{reason}</div>
+            </div>
           </Card>
         )
       })}
@@ -220,9 +209,9 @@ function formatRelative(iso: string): string {
   const days = Math.round(ms / 86_400_000)
   if (days < 1) return 'hoje'
   if (days === 1) return 'ontem'
-  if (days < 30) return `${days}d`
+  if (days < 30) return `há ${days}d`
   const months = Math.round(days / 30)
-  if (months < 12) return `${months} meses`
+  if (months < 12) return `há ${months} meses`
   const years = Math.round(months / 12)
-  return `${years} anos`
+  return `há ${years} anos`
 }

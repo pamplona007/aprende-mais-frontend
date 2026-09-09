@@ -82,7 +82,6 @@ const ptBR = {
       REVOKED_BY_TEACHER: 'você cancelou',
       REVOKED_BY_STUDENT: 'aluno cancelou',
     },
-    viewProfile: 'Ver perfil →',
     teacherNotFound: 'Professor não encontrado',
     pickAnother: 'Escolha um professor na página inicial.',
     goHome: 'Ir para o início',

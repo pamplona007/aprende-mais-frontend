@@ -1,9 +1,4 @@
-import type {
-  InputHTMLAttributes,
-  ReactNode,
-  Ref,
-  TextareaHTMLAttributes,
-} from 'react'
+import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react'
 import { forwardRef, useId } from 'react'
 import styles from './Field.module.css'
 
@@ -15,10 +10,10 @@ interface BaseProps {
 }
 
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'ref'> & {
-  ref?: Ref<HTMLInputElement>
+  ref?: React.Ref<HTMLInputElement>
 }
 export type TextareaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'ref'> & {
-  ref?: Ref<HTMLTextAreaElement>
+  ref?: React.Ref<HTMLTextAreaElement>
 }
 
 interface InputFieldProps extends BaseProps {

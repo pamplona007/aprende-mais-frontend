@@ -1,51 +1,35 @@
-/* Aprende+ global styles
- * ----------------------------------------------------------------
- * This file holds ONLY:
- *   - Design tokens (CSS custom properties) — colors, shape, elevation, spacing, type
- *   - Resets & base typography
- *   - Truly shared one-line text helpers (.muted, .tiny)
- *   - .page-header + .page-header__crumbs (used inline in every page, simple)
- *   - .code styling
- *
- * Everything else lives in *.module.css next to its component.
- */
-
 :root {
-  /* Palette */
   --color-bg: #f7faff;
   --color-surface: #ffffff;
   --color-surface-muted: #eef4ff;
-  --color-border: #dde7f7;
-  --color-border-strong: #b9cef2;
+  --color-border: #e7eef9;
+  --color-border-strong: #c8d7ed;
 
-  --color-primary: #1cb0f6;          /* Duolingo-style sky blue */
+  --color-primary: #1cb0f6;
   --color-primary-strong: #0e8ec7;
-  --color-primary-soft: #e0f4fd;
-  --color-accent: #58cc02;            /* Duolingo green for "active" */
-  --color-accent-soft: #ddf5d4;
-  --color-warning: #ff9600;           /* Duolingo orange — pending */
-  --color-warning-soft: #fff1de;
-  --color-danger: #ff4b4b;
-  --color-danger-soft: #ffe1e1;
-  --color-neutral: #777;
-  --color-neutral-soft: #f0f0f0;
+  --color-primary-soft: #e6f6fd;
+  --color-accent: #2bb24c;
+  --color-accent-soft: #e6f6e9;
+  --color-warning: #e89113;
+  --color-warning-soft: #fdf3e3;
+  --color-danger: #d84646;
+  --color-danger-soft: #fbe9e9;
+  --color-neutral: #7b8aa0;
+  --color-neutral-soft: #f0f3f7;
 
   --color-text: #1f2d3d;
-  --color-text-muted: #5b6b80;
+  --color-text-muted: #6b7a90;
   --color-text-on-primary: #ffffff;
 
-  /* Shape */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-pill: 999px;
 
-  /* Elevation */
-  --shadow-sm: 0 1px 2px rgba(31, 45, 61, 0.06);
-  --shadow-md: 0 4px 12px rgba(31, 45, 61, 0.08);
-  --shadow-lg: 0 10px 30px rgba(31, 45, 61, 0.12);
+  --shadow-sm: 0 1px 2px rgba(31, 45, 61, 0.04);
+  --shadow-md: 0 2px 8px rgba(31, 45, 61, 0.06);
+  --shadow-lg: 0 8px 24px rgba(31, 45, 61, 0.08);
 
-  /* Spacing scale */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -53,16 +37,14 @@
   --space-5: 24px;
   --space-6: 32px;
   --space-7: 48px;
+  --space-8: 64px;
 
-  /* Typography */
   --font-sans:
-    'Nunito', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    'Inter', 'Nunito', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-bold: 700;
-  --font-weight-black: 900;
 }
-
-/* ── Reset + base ─────────────────────────────────────── */
 
 * {
   box-sizing: border-box;
@@ -83,6 +65,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  font-size: 15px;
 }
 
 h1,
@@ -91,17 +74,18 @@ h3,
 h4 {
   margin: 0 0 var(--space-3) 0;
   color: var(--color-text);
-  font-weight: var(--font-weight-black);
-  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 h1 {
-  font-size: 2rem;
+  font-size: 1.75rem;
 }
 h2 {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
 }
 h3 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 }
 
 p {
@@ -112,7 +96,7 @@ p {
 a {
   color: var(--color-primary-strong);
   text-decoration: none;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
 }
 a:hover {
   text-decoration: underline;
@@ -120,7 +104,7 @@ a:hover {
 
 button {
   font-family: inherit;
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
   border: none;
 }
@@ -129,29 +113,25 @@ input,
 textarea,
 select {
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 code {
   font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 0.9em;
+  font-size: 0.88em;
   background: var(--color-surface-muted);
   padding: 1px 6px;
   border-radius: 4px;
 }
 
-/* ── Page header (used inline by every page; tiny enough to stay global) */
-
 .page-header {
   margin-bottom: var(--space-5);
 }
 .page-header__crumbs {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--color-text-muted);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
 }
-
-/* ── One-line text helpers ────────────────────────────── */
 
 .muted {
   color: var(--color-text-muted);

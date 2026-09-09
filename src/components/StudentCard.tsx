@@ -8,13 +8,10 @@ interface BaseProps {
   user: UserSummary
   meta?: ReactNode
   bottom?: ReactNode
-  /** When set, the card is rendered as a Link to this href. */
   href?: string
-  /** Renders a non-interactive card (no link, no onClick). */
   static?: boolean
   selected?: boolean
   onClick?: () => void
-  /** Override the default "View profile →" footer action. */
   footer?: ReactNode
 }
 
@@ -40,14 +37,14 @@ export function StudentCard({
     <>
       <div className={styles.cardRow}>
         <Avatar user={user} />
-        <div>
+        <div className={styles.cardMain}>
           <div className={styles.name}>{user.displayName}</div>
           <div className={styles.meta}>{user.email}</div>
         </div>
+        {meta && <div className={styles.statusCorner}>{meta}</div>}
       </div>
       {bottom}
-      {meta && <div className={styles.meta}>{meta}</div>}
-      {footer && <div className={styles.actions}>{footer}</div>}
+      {footer && <div className={styles.footer}>{footer}</div>}
     </>
   )
 

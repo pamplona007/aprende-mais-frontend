@@ -1,20 +1,24 @@
 .callout {
-  padding: var(--space-4);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  border: 1px solid transparent;
 }
 
 .info {
   background: var(--color-primary-soft);
   color: var(--color-primary-strong);
+  border-color: var(--color-primary-soft);
 }
 
 .warning {
   background: var(--color-warning-soft);
   color: var(--color-warning);
+  border-color: var(--color-warning-soft);
 }
 
 .danger {
   background: var(--color-danger-soft);
   color: var(--color-danger);
+  border-color: var(--color-danger-soft);
 }

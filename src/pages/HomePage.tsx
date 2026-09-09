@@ -14,7 +14,7 @@ export function HomePage() {
   return (
     <div className={styles.landing}>
       <section className={styles.hero}>
-        <h1>
+        <h1 className={styles.brand}>
           Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
         </h1>
         <p className={styles.tagline}>{t('home.hero')}</p>

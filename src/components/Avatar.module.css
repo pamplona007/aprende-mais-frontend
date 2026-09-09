@@ -1,32 +1,26 @@
-/* Avatar component — three sizes. The wrapper uses the existing student-card
-   avatar style so it composes naturally with cards. */
-
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--color-primary-soft);
   color: var(--color-primary-strong);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: var(--font-weight-black);
-  font-size: 1.1rem;
-  flex-shrink: 0;
-}
-
-.avatar--sm {
-  width: 32px;
-  height: 32px;
+  font-weight: var(--font-weight-medium);
   font-size: 0.85rem;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
-.avatar--md {
-  /* default — uses .avatar styles */
+.avatarSm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.72rem;
 }
 
-.avatar--lg {
-  width: 72px;
-  height: 72px;
-  font-size: 1.6rem;
+.avatarLg {
+  width: 56px;
+  height: 56px;
+  font-size: 1.15rem;
 }

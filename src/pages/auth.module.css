@@ -1,21 +1,19 @@
-/* Auth pages — shared card layout for login + register. */
-
 .shell {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 70vh;
-  padding: var(--space-4);
+  padding: var(--space-5);
 }
 
 .card {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: var(--space-6);
+  padding: var(--space-6) var(--space-6) var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -25,24 +23,38 @@
   text-align: center;
 }
 
+.brand {
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-2) 0;
+  color: var(--color-text);
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: 0.92rem;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
 }
 
-.error {
-  color: var(--color-danger);
-  font-size: 0.85rem;
-  font-weight: var(--font-weight-bold);
-}
-
 .footer {
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.footerLabel {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
 }
 
 .demoList {
@@ -55,10 +67,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 1px;
   padding: var(--space-2) var(--space-3);
   background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
+  border: 1px solid transparent;
   border-radius: var(--radius-md);
   cursor: pointer;
   font: inherit;
@@ -71,9 +83,27 @@
   background: var(--color-primary-soft);
 }
 
-.typingHint {
-  margin-top: var(--space-3);
-  margin-bottom: 0;
+.demoChipRole {
+  font-weight: var(--font-weight-medium);
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.demoChipEmail {
+  font-size: 0.75rem;
   color: var(--color-text-muted);
-  font-size: 0.8rem;
+}
+
+.footLink {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.typingHint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
 }
