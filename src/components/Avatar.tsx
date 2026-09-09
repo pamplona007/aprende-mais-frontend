@@ -1,14 +1,9 @@
 import type { UserSummary } from '../types'
+import styles from './Avatar.module.css'
 
 interface AvatarProps {
   user: Pick<UserSummary, 'displayName'>
   size?: 'sm' | 'md' | 'lg'
-}
-
-const SIZES = {
-  sm: { box: 32, fontSize: '0.85rem' },
-  md: { box: 48, fontSize: '1.1rem' },
-  lg: { box: 72, fontSize: '1.6rem' },
 }
 
 export function Avatar({ user, size = 'md' }: AvatarProps) {
@@ -18,13 +13,12 @@ export function Avatar({ user, size = 'md' }: AvatarProps) {
     .join('')
     .slice(0, 2)
     .toUpperCase()
-  const { box, fontSize } = SIZES[size]
+
+  const sizeClass =
+    size === 'sm' ? styles.avatarSm : size === 'lg' ? styles.avatarLg : styles.avatarMd
+
   return (
-    <div
-      className="student-card__avatar"
-      style={{ width: box, height: box, fontSize }}
-      aria-hidden="true"
-    >
+    <div className={`${styles.avatar} ${sizeClass}`} aria-hidden="true">
       {initials}
     </div>
   )

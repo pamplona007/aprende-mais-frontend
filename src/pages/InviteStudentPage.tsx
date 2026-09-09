@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { getRelationshipsForTeacher, getUserById, searchStudents } from '../mocks'
-import { Avatar } from '../components/Avatar'
+import { StudentCard } from '../components/StudentCard'
+import styles from './InviteStudentPage.module.css'
 
 export function InviteStudentPage() {
   const { teacherId } = useParams<{ teacherId: string }>()
@@ -11,7 +12,6 @@ export function InviteStudentPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [message, setMessage] = useState('')
 
-  // Students the teacher is NOT already in an open relationship with.
   const alreadyOpenIds = useMemo(() => {
     if (!teacherId) return new Set<string>()
     return new Set(
@@ -56,7 +56,7 @@ export function InviteStudentPage() {
           </label>
           <input
             id="search"
-            className="field__input"
+            className={styles.searchInput}
             placeholder="Type a name or email…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -75,26 +75,12 @@ export function InviteStudentPage() {
             </div>
           ) : (
             candidates.map((s) => (
-              <button
+              <StudentCard
                 key={s.id}
-                type="button"
-                className="student-card"
+                user={s}
+                selected={selectedId === s.id}
                 onClick={() => setSelectedId(s.id)}
-                style={{
-                  borderColor:
-                    selectedId === s.id ? 'var(--color-primary)' : 'var(--color-border)',
-                  boxShadow:
-                    selectedId === s.id ? '0 0 0 3px var(--color-primary-soft)' : 'var(--shadow-sm)',
-                }}
-              >
-                <div className="row">
-                  <Avatar user={s} />
-                  <div>
-                    <div className="student-card__name">{s.displayName}</div>
-                    <div className="student-card__meta">{s.email}</div>
-                  </div>
-                </div>
-              </button>
+              />
             ))
           )}
         </div>
@@ -109,7 +95,7 @@ export function InviteStudentPage() {
             </label>
             <textarea
               id="message"
-              className="field__textarea"
+              className={`field__textarea ${styles.textarea}`}
               placeholder="Say hi and explain how you'd like to help…"
               value={message}
               onChange={(e) => setMessage(e.target.value)}

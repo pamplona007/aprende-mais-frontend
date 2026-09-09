@@ -1,12 +1,11 @@
 import { Link, useNavigate, useParams } from 'react-router'
 import { useMemo, useState } from 'react'
-import {
-  getRelationshipsForTeacher,
-  getUserById,
-} from '../mocks'
+import { getRelationshipsForTeacher, getUserById } from '../mocks'
 import type { TeachingRelationship } from '../types'
 import { StatusPill } from '../components/StatusPill'
 import { Avatar } from '../components/Avatar'
+import { StudentCard } from '../components/StudentCard'
+import styles from './TeacherDashboard.module.css'
 
 type TabKey = 'ACTIVE' | 'PENDING' | 'PAST'
 
@@ -16,14 +15,20 @@ const TAB_DEFS: { key: TabKey; label: string }[] = [
   { key: 'PAST', label: 'Past' },
 ]
 
+const PAST_STATUSES = ['DECLINED', 'REVOKED_BY_TEACHER', 'REVOKED_BY_STUDENT'] as const
+type PastStatus = (typeof PAST_STATUSES)[number]
+
+const PAST_REASON: Record<PastStatus, string> = {
+  DECLINED: 'student declined the invite',
+  REVOKED_BY_TEACHER: 'you withdrew',
+  REVOKED_BY_STUDENT: 'student revoked',
+}
+
 function classify(rel: TeachingRelationship): TabKey {
   if (rel.status === 'ACCEPTED') return 'ACTIVE'
   if (rel.status === 'PENDING') return 'PENDING'
   return 'PAST'
 }
-
-const PAST_STATUSES = ['DECLINED', 'REVOKED_BY_TEACHER', 'REVOKED_BY_STUDENT'] as const
-type PastStatus = (typeof PAST_STATUSES)[number]
 
 export function TeacherDashboard() {
   const { teacherId } = useParams<{ teacherId: string }>()
@@ -53,12 +58,6 @@ export function TeacherDashboard() {
     )
   }
 
-  const counts = {
-    ACTIVE: grouped.ACTIVE.length,
-    PENDING: grouped.PENDING.length,
-    PAST: grouped.PAST.length,
-  }
-
   return (
     <div className="stack stack--lg">
       <section className="page-header">
@@ -84,91 +83,103 @@ export function TeacherDashboard() {
         </div>
       </section>
 
-      <nav className="tabs" role="tablist">
+      <nav className={styles.tabs} role="tablist">
         {TAB_DEFS.map((t) => (
           <button
             key={t.key}
             role="tab"
             aria-selected={tab === t.key}
-            className={`tabs__tab ${tab === t.key ? 'tabs__tab--active' : ''}`}
+            className={`${styles.tab} ${tab === t.key ? styles.tabActive : ''}`}
             onClick={() => setTab(t.key)}
           >
             {t.label}
-            <span className="muted tiny" style={{ marginLeft: 8 }}>
-              ({counts[t.key]})
-            </span>
+            <span className={styles.tabCount}>({grouped[t.key].length})</span>
           </button>
         ))}
       </nav>
 
-      {tab === 'ACTIVE' && <RelationshipGrid rows={grouped.ACTIVE} teacherId={teacher.id} />}
-      {tab === 'PENDING' && <RelationshipGrid rows={grouped.PENDING} teacherId={teacher.id} pending />}
+      {tab === 'ACTIVE' && <ActiveGrid rows={grouped.ACTIVE} teacherId={teacher.id} />}
+      {tab === 'PENDING' && <PendingGrid rows={grouped.PENDING} teacherId={teacher.id} />}
       {tab === 'PAST' && <PastList rows={grouped.PAST} teacherId={teacher.id} />}
     </div>
   )
 }
 
-function RelationshipGrid({
+function ActiveGrid({ rows, teacherId }: { rows: TeachingRelationship[]; teacherId: string }) {
+  return (
+    <Grid
+      rows={rows}
+      teacherId={teacherId}
+      emptyTitle="No active students yet"
+      emptyBody="Once a student accepts your invite, they will appear here."
+      showMessage
+    />
+  )
+}
+
+function PendingGrid({ rows, teacherId }: { rows: TeachingRelationship[]; teacherId: string }) {
+  return (
+    <Grid
+      rows={rows}
+      teacherId={teacherId}
+      emptyTitle="No pending invites"
+      emptyBody="Send an invite to bring a student on board."
+      showMessage
+      pending
+    />
+  )
+}
+
+function Grid({
   rows,
   teacherId,
+  emptyTitle,
+  emptyBody,
+  showMessage,
   pending,
 }: {
   rows: TeachingRelationship[]
   teacherId: string
+  emptyTitle: string
+  emptyBody: string
+  showMessage: boolean
   pending?: boolean
 }) {
   if (rows.length === 0) {
     return (
       <div className="empty-state">
-        <div className="empty-state__title">
-          {pending ? 'No pending invites' : 'No active students yet'}
-        </div>
-        <p>
-          {pending
-            ? 'Send an invite to bring a student on board.'
-            : 'Once a student accepts your invite, they will appear here.'}
-        </p>
+        <div className="empty-state__title">{emptyTitle}</div>
+        <p>{emptyBody}</p>
       </div>
     )
   }
   return (
-    <div className="grid-cards">
+    <div className={styles.grid}>
       {rows.map((rel) => {
         const student = getUserById(rel.studentId)
         if (!student) return null
         return (
-          <Link
+          <StudentCard
             key={rel.id}
-            to={`/teacher/${teacherId}/students/${student.id}`}
-            className="student-card"
-          >
-            <div className="row">
-              <Avatar user={student} />
-              <div>
-                <div className="student-card__name">{student.displayName}</div>
-                <div className="student-card__meta">{student.email}</div>
-              </div>
-            </div>
-            <div className="row">
-              <StatusPill status={rel.status} />
-              <span className="muted tiny">
-                {pending
-                  ? `Invited ${formatRelative(rel.invitedAt)}`
-                  : `Active since ${formatRelative(rel.respondedAt ?? rel.invitedAt)}`}
-              </span>
-            </div>
-            {rel.message && (
-              <div
-                className="callout"
-                style={{ fontSize: '0.85rem', padding: 'var(--space-3)' }}
-              >
-                “{rel.message}”
-              </div>
-            )}
-            <div className="student-card__actions">
-              <span className="btn btn--ghost btn--small">View profile →</span>
-            </div>
-          </Link>
+            user={student}
+            href={`/teacher/${teacherId}/students/${student.id}`}
+            bottom={
+              <>
+                <div className={styles.statusRow}>
+                  <StatusPill status={rel.status} />
+                  <span className="muted tiny">
+                    {pending
+                      ? `Invited ${formatRelative(rel.invitedAt)}`
+                      : `Active since ${formatRelative(rel.respondedAt ?? rel.invitedAt)}`}
+                  </span>
+                </div>
+                {showMessage && rel.message && (
+                  <div className={styles.relMessage}>{rel.message}</div>
+                )}
+              </>
+            }
+            footer={<span className="btn btn--ghost btn--small">View profile →</span>}
+          />
         )
       })}
     </div>
@@ -196,22 +207,14 @@ function PastList({
         const student = getUserById(rel.studentId)
         if (!student) return null
         if (rel.status === 'PENDING' || rel.status === 'ACCEPTED') return null
-        const reason: Record<PastStatus, string> = {
-          DECLINED: 'student declined the invite',
-          REVOKED_BY_TEACHER: 'you withdrew',
-          REVOKED_BY_STUDENT: 'student revoked',
-        }
-        const reasonText = reason[rel.status]
+        const reason = PAST_REASON[rel.status as PastStatus]
         return (
-          <div key={rel.id} className="card">
-            <div className="row row--between">
+          <div key={rel.id} className={styles.pastCard}>
+            <div className={styles.pastRow}>
               <div className="row">
                 <Avatar user={student} size="sm" />
                 <div>
-                  <Link
-                    to={`/teacher/${teacherId}/students/${student.id}`}
-                    style={{ color: 'inherit' }}
-                  >
+                  <Link to={`/teacher/${teacherId}/students/${student.id}`} style={{ color: 'inherit' }}>
                     <strong>{student.displayName}</strong>
                   </Link>
                   <div className="muted tiny">{student.email}</div>
@@ -219,7 +222,7 @@ function PastList({
               </div>
               <div className="row">
                 <StatusPill status={rel.status} />
-                <span className="muted tiny">{reasonText}</span>
+                <span className={styles.pastReason}>{reason}</span>
               </div>
             </div>
           </div>

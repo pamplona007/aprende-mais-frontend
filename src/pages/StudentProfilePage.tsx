@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router'
 import { getProfileByStudentId, getRelationshipsForTeacher, getUserById } from '../mocks'
 import { Avatar } from '../components/Avatar'
 import { StatusPill } from '../components/StatusPill'
+import styles from './StudentProfilePage.module.css'
 
 // Frozen at module load so age is stable across re-renders and oxlint stays happy.
 // (A real app would refresh this periodically or use an animated age counter.)
@@ -30,11 +31,8 @@ export function StudentProfilePage() {
     )
   }
 
-  // `Date.now()` is impure per oxlint's purity rules. We capture it at module
-  // load (which is good enough for displaying a birth-year-derived age).
-  const NOW = MODULE_NOW
   const ageYears = student.birthDate
-    ? Math.floor((NOW - new Date(student.birthDate).getTime()) / (365.25 * 86_400_000))
+    ? Math.floor((MODULE_NOW - new Date(student.birthDate).getTime()) / (365.25 * 86_400_000))
     : null
 
   return (
@@ -44,9 +42,9 @@ export function StudentProfilePage() {
           <Link to="/">Home</Link> ·{' '}
           <Link to={`/teacher/${teacher.id}`}>{teacher.displayName}</Link> · {student.displayName}
         </div>
-        <div className="row">
+        <div className={styles.profileHeader}>
           <Avatar user={student} size="lg" />
-          <div>
+          <div className={styles.profileMeta}>
             <h1 style={{ margin: 0 }}>{student.displayName}</h1>
             <p className="muted" style={{ margin: 0 }}>
               {student.email}
@@ -54,7 +52,7 @@ export function StudentProfilePage() {
             </p>
           </div>
           {relationship && (
-            <div style={{ marginLeft: 'auto' }}>
+            <div className={styles.statusWrap}>
               <StatusPill status={relationship.status} />
             </div>
           )}
@@ -63,12 +61,10 @@ export function StudentProfilePage() {
 
       <section className="stack">
         <h2>Learning profile</h2>
-        <div className="grid-cards">
+        <div className={styles.cardsRow}>
           <div className="card">
             <div className="card__title">Level</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800 }}>
-              {profile?.learningLevel ?? '—'}
-            </div>
+            <div className={styles.bigNumber}>{profile?.learningLevel ?? '—'}</div>
             <p className="muted tiny" style={{ margin: 0 }}>
               Higher = more advanced
             </p>
@@ -106,21 +102,19 @@ export function StudentProfilePage() {
       {relationship && (
         <section className="card">
           <div className="card__title">Relationship</div>
-          <div className="stack">
-            <div className="row">
+          <div className={styles.relSection}>
+            <div className={styles.relMeta}>
               <StatusPill status={relationship.status} />
               <span className="muted tiny">Invited {formatDate(relationship.invitedAt)}</span>
               {relationship.respondedAt && (
-                <span className="muted tiny">
-                  · Responded {formatDate(relationship.respondedAt)}
-                </span>
+                <span className="muted tiny">· Responded {formatDate(relationship.respondedAt)}</span>
               )}
               {relationship.revokedAt && (
                 <span className="muted tiny">· Ended {formatDate(relationship.revokedAt)}</span>
               )}
             </div>
             {relationship.message && (
-              <div className="callout">Invite message: “{relationship.message}”</div>
+              <div className={styles.relMessage}>Invite message: “{relationship.message}”</div>
             )}
             <div className="row">
               <button
@@ -139,9 +133,9 @@ export function StudentProfilePage() {
 
 function KeyValueList({ data }: { data: Record<string, unknown> }) {
   return (
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }} className="stack">
+    <ul className={styles.kvList}>
       {Object.entries(data).map(([k, v]) => (
-        <li key={k} className="row row--between">
+        <li key={k} className={styles.kvRow}>
           <span className="muted tiny">{prettifyKey(k)}</span>
           <strong>{String(v)}</strong>
         </li>

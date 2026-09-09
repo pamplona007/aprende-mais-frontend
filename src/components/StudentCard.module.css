@@ -1,0 +1,67 @@
+/* StudentCard — a clickable card showing a student's avatar, name, email,
+   and optional status pill + invite message. Used in the dashboard grids
+   and the invite-page candidate picker. */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+}
+
+a.card:hover,
+button.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.cardSelected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.cardStatic {
+  cursor: default;
+}
+
+.cardRow {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.name {
+  font-weight: var(--font-weight-bold);
+  font-size: 1.05rem;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.message {
+  font-size: 0.85rem;
+  padding: var(--space-3);
+}
+
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}

@@ -1,0 +1,30 @@
+/* Status pill — five lifecycle states. */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.accepted {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.pending {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.declined,
+.revoked {
+  background: var(--color-neutral-soft);
+  color: var(--color-neutral);
+}

@@ -1,4 +1,5 @@
 import type { TeachingRelationshipStatus } from '../types'
+import styles from './StatusPill.module.css'
 
 const LABELS: Record<TeachingRelationshipStatus, string> = {
   PENDING: 'Pending',
@@ -8,14 +9,14 @@ const LABELS: Record<TeachingRelationshipStatus, string> = {
   REVOKED_BY_STUDENT: 'Revoked',
 }
 
-const CLASSES: Record<TeachingRelationshipStatus, string> = {
-  PENDING: 'pill pill--pending',
-  ACCEPTED: 'pill pill--accepted',
-  DECLINED: 'pill pill--declined',
-  REVOKED_BY_TEACHER: 'pill pill--revoked',
-  REVOKED_BY_STUDENT: 'pill pill--revoked',
+const CLASS_FOR: Record<TeachingRelationshipStatus, string> = {
+  PENDING: styles.pending,
+  ACCEPTED: styles.accepted,
+  DECLINED: styles.declined,
+  REVOKED_BY_TEACHER: styles.revoked,
+  REVOKED_BY_STUDENT: styles.revoked,
 }
 
 export function StatusPill({ status }: { status: TeachingRelationshipStatus }) {
-  return <span className={CLASSES[status]}>{LABELS[status]}</span>
+  return <span className={`${styles.pill} ${CLASS_FOR[status]}`}>{LABELS[status]}</span>
 }
