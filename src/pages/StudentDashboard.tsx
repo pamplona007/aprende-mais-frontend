@@ -1,13 +1,13 @@
 import { Link, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { getUserById } from '../mocks'
 import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
 import { Stack } from '../components/Stack'
 import styles from './StudentDashboard.module.css'
 
-// Placeholder while the student dashboard is built. Kept lightweight on purpose:
-// students can see their name + a clear link back to login.
 export function StudentDashboard() {
+  const { t } = useTranslation()
   const { studentId } = useParams<{ studentId: string }>()
   const student = studentId ? getUserById(studentId) : undefined
 
@@ -15,10 +15,10 @@ export function StudentDashboard() {
     return (
       <Stack gap="md">
         <EmptyState
-          title="Student not found"
+          title={t('studentDashboard.notFound')}
           action={
             <Button to="/" variant="ghost">
-              Go home
+              {t('teacherDashboard.goHome')}
             </Button>
           }
         />
@@ -30,22 +30,24 @@ export function StudentDashboard() {
     <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
-          <Link to="/">Home</Link> · Student area
+          <Link to="/">{t('studentDashboard.crumbsHome')}</Link> ·{' '}
+          {t('studentDashboard.crumbsArea')}
         </div>
-        <h1 className={styles.hello}>Hi, {student.displayName.split(' ')[0]} 👋</h1>
-        <p>This is where your lessons and teacher invites will live.</p>
+        <h1 className={styles.hello}>
+          {t('studentDashboard.hello', { name: student.displayName.split(' ')[0] })}
+        </h1>
+        <p>{t('studentDashboard.subtitle')}</p>
       </section>
 
       <EmptyState
-        title="Student dashboard coming soon"
+        title={t('studentDashboard.comingSoon')}
         action={
           <Link to="/" className="muted">
-            ← Back to home
+            {t('studentDashboard.backHome')}
           </Link>
         }
       >
-        The teacher area is fully wired; the student side (accepting invites, doing lessons,
-        seeing progress) is on the way.
+        {t('studentDashboard.comingSoonBody')}
       </EmptyState>
     </Stack>
   )

@@ -1,10 +1,12 @@
 import { Link, NavLink, useNavigate, Outlet } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/AuthProvider'
 import { Avatar } from './Avatar'
 import { Button } from './Button'
 import styles from './Layout.module.css'
 
 export function Layout() {
+  const { t } = useTranslation()
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
 
@@ -31,7 +33,7 @@ export function Layout() {
                     `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
                   }
                 >
-                  Teacher area
+                  {t('nav.teacherArea')}
                 </NavLink>
               )}
               {currentUser.role === 'STUDENT' && (
@@ -41,27 +43,29 @@ export function Layout() {
                     `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
                   }
                 >
-                  Student area
+                  {t('nav.studentArea')}
                 </NavLink>
               )}
               <div className={styles.userBlock}>
                 <Avatar user={currentUser} size="sm" />
                 <div className={styles.userMeta}>
                   <span className={styles.userName}>{currentUser.displayName}</span>
-                  <span className={styles.userRole}>{currentUser.role}</span>
+                  <span className={styles.userRole}>
+                    {t(`user.roleLabels.${currentUser.role}`)}
+                  </span>
                 </div>
               </div>
               <Button variant="ghost" size="sm" onClick={onLogout}>
-                Log out
+                {t('nav.logout')}
               </Button>
             </>
           ) : (
             <>
               <NavLink to="/login" className={styles.navLink}>
-                Login
+                {t('nav.login')}
               </NavLink>
               <NavLink to="/register" className={styles.navLink}>
-                Register
+                {t('nav.register')}
               </NavLink>
             </>
           )}

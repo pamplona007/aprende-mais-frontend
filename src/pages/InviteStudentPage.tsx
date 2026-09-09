@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { getRelationshipsForTeacher, getUserById, searchStudents } from '../mocks'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -11,6 +12,7 @@ import { StudentCard } from '../components/StudentCard'
 import styles from './InviteStudentPage.module.css'
 
 export function InviteStudentPage() {
+  const { t } = useTranslation()
   const { teacherId } = useParams<{ teacherId: string }>()
   const navigate = useNavigate()
   const teacher = teacherId ? getUserById(teacherId) : undefined
@@ -37,10 +39,10 @@ export function InviteStudentPage() {
     return (
       <Stack gap="md">
         <EmptyState
-          title="Teacher not found"
+          title={t('inviteStudent.teacherNotFound')}
           action={
             <Button to="/" variant="ghost">
-              Go home
+              {t('teacherDashboard.goHome')}
             </Button>
           }
         />
@@ -52,19 +54,20 @@ export function InviteStudentPage() {
     <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
-          <Link to="/">Home</Link> ·{' '}
-          <Link to={`/teacher/${teacher.id}`}>{teacher.displayName}</Link> · Invite a student
+          <Link to="/">{t('inviteStudent.crumbsHome')}</Link> ·{' '}
+          <Link to={`/teacher/${teacher.id}`}>{teacher.displayName}</Link> ·{' '}
+          {t('inviteStudent.title')}
         </div>
-        <h1>Invite a student</h1>
-        <p>Search for a student by name or email, then send them an invite.</p>
+        <h1>{t('inviteStudent.title')}</h1>
+        <p>{t('inviteStudent.subtitle')}</p>
       </section>
 
       <Stack gap="md">
         <Field
-          label="Find student"
+          label={t('inviteStudent.findLabel')}
           inputProps={{
             id: 'search',
-            placeholder: 'Type a name or email…',
+            placeholder: t('inviteStudent.findPlaceholder'),
             value: query,
             onChange: (e) => setQuery(e.target.value),
             autoFocus: true,
@@ -73,9 +76,8 @@ export function InviteStudentPage() {
 
         <Stack gap="md">
           {candidates.length === 0 ? (
-            <EmptyState title="No matching students">
-              Either nobody matches your search, or every matching student already has an open
-              relationship with you.
+            <EmptyState title={t('inviteStudent.empty.noMatches')}>
+              {t('inviteStudent.empty.noMatchesBody')}
             </EmptyState>
           ) : (
             candidates.map((s) => (
@@ -91,13 +93,13 @@ export function InviteStudentPage() {
       </Stack>
 
       {selected && (
-        <Card title={`Send invite to ${selected.displayName}`}>
+        <Card title={t('inviteStudent.sendTo', { name: selected.displayName })}>
           <Field
             as="textarea"
-            label="Message (optional)"
+            label={t('inviteStudent.messageLabel')}
             inputProps={{
               id: 'message',
-              placeholder: "Say hi and explain how you'd like to help…",
+              placeholder: t('inviteStudent.messagePlaceholder'),
               value: message,
               onChange: (e) => setMessage(e.target.value),
               className: styles.textarea,
@@ -106,17 +108,18 @@ export function InviteStudentPage() {
           <Row>
             <Button
               onClick={() => {
-                // Wired to the real API in a follow-up; for now this just navigates back.
-                // See src/api/teaching.ts → sendInvite().
                 alert(
-                  `Invite sent to ${selected.displayName}${
-                    message ? ` with message: “${message}”` : ''
-                  } (mock)`,
+                  t('inviteStudent.inviteSentMock', {
+                    name: selected.displayName,
+                    message: message
+                      ? t('inviteStudent.inviteSentWithMessage', { message })
+                      : '',
+                  }),
                 )
                 navigate(`/teacher/${teacher.id}`)
               }}
             >
-              Send invite
+              {t('inviteStudent.send')}
             </Button>
             <Button
               variant="ghost"
@@ -125,7 +128,7 @@ export function InviteStudentPage() {
                 setMessage('')
               }}
             >
-              Cancel
+              {t('inviteStudent.cancel')}
             </Button>
           </Row>
         </Card>

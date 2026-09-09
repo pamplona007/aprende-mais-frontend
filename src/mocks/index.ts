@@ -1,15 +1,12 @@
-// Mock data — used by the teacher dashboard pages until the API wiring lands.
-// Shape matches what the backend will eventually return (see src/types).
-
 import type {
   StudentProfileSummary,
   TeachingRelationship,
   TeachingRelationshipStatus,
   UserSummary,
-} from '../types';
+} from '../types'
 
-const now = new Date();
-const daysAgo = (n: number) => new Date(now.getTime() - n * 86_400_000).toISOString();
+const now = new Date()
+const daysAgo = (n: number) => new Date(now.getTime() - n * 86_400_000).toISOString()
 
 export const mockUsers: UserSummary[] = [
   {
@@ -68,7 +65,7 @@ export const mockUsers: UserSummary[] = [
     birthDate: '2016-11-08T00:00:00.000Z',
     createdAt: daysAgo(5),
   },
-];
+]
 
 export const mockProfiles: Record<string, StudentProfileSummary> = {
   s_ana: {
@@ -111,9 +108,8 @@ export const mockProfiles: Record<string, StudentProfileSummary> = {
     preferences: {},
     notes: null,
   },
-};
+}
 
-// Each relationship keyed by id, with the teacherId/studentId pair.
 const rel = (
   id: string,
   teacherId: string,
@@ -133,10 +129,9 @@ const rel = (
   createdAt: daysAgo(daysInvited),
   updatedAt: daysAgo(daysInvited),
   ...extras,
-});
+})
 
 export const mockRelationships: TeachingRelationship[] = [
-  // Paula's relationships
   rel('r1', 't_paula', 's_ana', 'ACCEPTED', 60, {
     message: 'Vamos trabalhar leitura juntos!',
     respondedAt: daysAgo(59),
@@ -151,30 +146,29 @@ export const mockRelationships: TeachingRelationship[] = [
   rel('r4', 't_paula', 's_joao', 'REVOKED_BY_TEACHER', 15, {
     revokedAt: daysAgo(10),
   }),
-  // Ruir's relationships
   rel('r5', 't_rui', 's_marco', 'DECLINED', 20, {
     respondedAt: daysAgo(19),
   }),
-];
+]
 
 export function getUserById(id: string): UserSummary | undefined {
-  return mockUsers.find((u) => u.id === id);
+  return mockUsers.find((u) => u.id === id)
 }
 
 export function getProfileByStudentId(studentId: string): StudentProfileSummary | undefined {
-  return mockProfiles[studentId];
+  return mockProfiles[studentId]
 }
 
 export function getRelationshipsForTeacher(teacherId: string): TeachingRelationship[] {
-  return mockRelationships.filter((r) => r.teacherId === teacherId);
+  return mockRelationships.filter((r) => r.teacherId === teacherId)
 }
 
 export function searchStudents(query: string): UserSummary[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return mockUsers.filter((u) => u.role === 'STUDENT');
+  const q = query.trim().toLowerCase()
+  if (!q) return mockUsers.filter((u) => u.role === 'STUDENT')
   return mockUsers.filter(
     (u) =>
       u.role === 'STUDENT' &&
       (u.displayName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)),
-  );
+  )
 }

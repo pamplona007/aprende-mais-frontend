@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { getProfileByStudentId, getRelationshipsForTeacher, getUserById } from '../mocks'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
@@ -9,11 +10,10 @@ import { Stack } from '../components/Stack'
 import { StatusPill } from '../components/StatusPill'
 import styles from './StudentProfilePage.module.css'
 
-// Frozen at module load so age is stable across re-renders and oxlint stays happy.
-// (A real app would refresh this periodically or use an animated age counter.)
 const MODULE_NOW = Date.now()
 
 export function StudentProfilePage() {
+  const { t } = useTranslation()
   const { teacherId, studentId } = useParams<{ teacherId: string; studentId: string }>()
   const navigate = useNavigate()
 
@@ -29,10 +29,10 @@ export function StudentProfilePage() {
     return (
       <Stack gap="md">
         <EmptyState
-          title="Student not found"
+          title={t('studentProfile.studentNotFound')}
           action={
             <Button to="/" variant="ghost">
-              Go home
+              {t('teacherDashboard.goHome')}
             </Button>
           }
         />
@@ -48,7 +48,7 @@ export function StudentProfilePage() {
     <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
-          <Link to="/">Home</Link> ·{' '}
+          <Link to="/">{t('studentProfile.crumbsHome')}</Link> ·{' '}
           <Link to={`/teacher/${teacher.id}`}>{teacher.displayName}</Link> · {student.displayName}
         </div>
         <div className={styles.profileHeader}>
@@ -57,7 +57,7 @@ export function StudentProfilePage() {
             <h1 style={{ margin: 0 }}>{student.displayName}</h1>
             <p className="muted" style={{ margin: 0 }}>
               {student.email}
-              {ageYears !== null && ` · ${ageYears} years old`}
+              {ageYears !== null && ` · ${ageYears} ${t('studentProfile.yearsOld')}`}
             </p>
           </div>
           {relationship && (
@@ -69,29 +69,29 @@ export function StudentProfilePage() {
       </section>
 
       <Stack gap="md">
-        <h2>Learning profile</h2>
+        <h2>{t('studentProfile.sections.learningProfile')}</h2>
         <div className={styles.cardsRow}>
-          <Card title="Level">
+          <Card title={t('studentProfile.cards.level')}>
             <div className={styles.bigNumber}>{profile?.learningLevel ?? '—'}</div>
             <p className="muted tiny" style={{ margin: 0 }}>
-              Higher = more advanced
+              {t('studentProfile.cards.levelHint')}
             </p>
           </Card>
-          <Card title="Accessibility">
+          <Card title={t('studentProfile.cards.accessibility')}>
             {profile && Object.keys(profile.accessibility).length > 0 ? (
               <KeyValueList data={profile.accessibility} />
             ) : (
               <p className="muted" style={{ margin: 0 }}>
-                None set
+                {t('studentProfile.noneSet')}
               </p>
             )}
           </Card>
-          <Card title="Preferences">
+          <Card title={t('studentProfile.cards.preferences')}>
             {profile && Object.keys(profile.preferences).length > 0 ? (
               <KeyValueList data={profile.preferences} />
             ) : (
               <p className="muted" style={{ margin: 0 }}>
-                None set
+                {t('studentProfile.noneSet')}
               </p>
             )}
           </Card>
@@ -99,30 +99,42 @@ export function StudentProfilePage() {
       </Stack>
 
       {profile?.notes && (
-        <Card variant="muted" title="Teacher notes">
+        <Card variant="muted" title={t('studentProfile.sections.teacherNotes')}>
           <p style={{ margin: 0 }}>{profile.notes}</p>
         </Card>
       )}
 
       {relationship && (
-        <Card title="Relationship">
+        <Card title={t('studentProfile.sections.relationship')}>
           <Stack gap="md">
             <div className={styles.relMeta}>
               <StatusPill status={relationship.status} />
-              <span className="muted tiny">Invited {formatDate(relationship.invitedAt)}</span>
+              <span className="muted tiny">
+                {t('studentProfile.relMeta.invited', { date: formatDate(relationship.invitedAt) })}
+              </span>
               {relationship.respondedAt && (
-                <span className="muted tiny">· Responded {formatDate(relationship.respondedAt)}</span>
+                <span className="muted tiny">
+                  {t('studentProfile.relMeta.responded', {
+                    date: formatDate(relationship.respondedAt),
+                  })}
+                </span>
               )}
               {relationship.revokedAt && (
-                <span className="muted tiny">· Ended {formatDate(relationship.revokedAt)}</span>
+                <span className="muted tiny">
+                  {t('studentProfile.relMeta.ended', {
+                    date: formatDate(relationship.revokedAt),
+                  })}
+                </span>
               )}
             </div>
             {relationship.message && (
-              <div className={styles.relMessage}>Invite message: “{relationship.message}”</div>
+              <div className={styles.relMessage}>
+                {t('studentProfile.inviteMessage')} "{relationship.message}"
+              </div>
             )}
             <Row>
               <Button variant="ghost" size="sm" onClick={() => navigate(`/teacher/${teacher.id}`)}>
-                ← Back to dashboard
+                {t('studentProfile.backToDashboard')}
               </Button>
             </Row>
           </Stack>
@@ -150,5 +162,5 @@ function prettifyKey(k: string): string {
 }
 
 function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString()
+  return new Date(iso).toLocaleDateString('pt-BR')
 }

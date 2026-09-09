@@ -1,8 +1,3 @@
-// Typed wrappers for the teaching-relationship endpoints on the backend.
-// Not consumed yet — wired up so the UI can switch from mock data to real
-// calls once the API is stable. See src/api/README (todo: write) for the
-// migration plan.
-
 import { api } from '../lib/api';
 import type { TeachingRelationship, TeachingRelationshipStatus } from '../types';
 

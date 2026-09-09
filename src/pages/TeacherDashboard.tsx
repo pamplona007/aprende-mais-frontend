@@ -1,5 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getRelationshipsForTeacher, getUserById } from '../mocks'
 import type { TeachingRelationship } from '../types'
 import { StatusPill } from '../components/StatusPill'
@@ -15,20 +16,14 @@ import styles from './TeacherDashboard.module.css'
 
 type TabKey = 'ACTIVE' | 'PENDING' | 'PAST'
 
-const TAB_DEFS: { key: TabKey; label: string }[] = [
-  { key: 'ACTIVE', label: 'Active' },
-  { key: 'PENDING', label: 'Pending' },
-  { key: 'PAST', label: 'Past' },
+const TAB_DEFS: { key: TabKey; labelKey: string }[] = [
+  { key: 'ACTIVE', labelKey: 'active' },
+  { key: 'PENDING', labelKey: 'pending' },
+  { key: 'PAST', labelKey: 'past' },
 ]
 
 const PAST_STATUSES = ['DECLINED', 'REVOKED_BY_TEACHER', 'REVOKED_BY_STUDENT'] as const
 type PastStatus = (typeof PAST_STATUSES)[number]
-
-const PAST_REASON: Record<PastStatus, string> = {
-  DECLINED: 'student declined the invite',
-  REVOKED_BY_TEACHER: 'you withdrew',
-  REVOKED_BY_STUDENT: 'student revoked',
-}
 
 function classify(rel: TeachingRelationship): TabKey {
   if (rel.status === 'ACCEPTED') return 'ACTIVE'
@@ -37,6 +32,7 @@ function classify(rel: TeachingRelationship): TabKey {
 }
 
 export function TeacherDashboard() {
+  const { t } = useTranslation()
   const { teacherId } = useParams<{ teacherId: string }>()
   const navigate = useNavigate()
   const teacher = teacherId ? getUserById(teacherId) : undefined
@@ -56,14 +52,14 @@ export function TeacherDashboard() {
     return (
       <Stack gap="md">
         <EmptyState
-          title="Teacher not found"
+          title={t('teacherDashboard.teacherNotFound')}
           action={
             <Button to="/" variant="ghost">
-              Go home
+              {t('teacherDashboard.goHome')}
             </Button>
           }
         >
-          Pick a teacher from the home page.
+          {t('teacherDashboard.pickAnother')}
         </EmptyState>
       </Stack>
     )
@@ -73,7 +69,8 @@ export function TeacherDashboard() {
     <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
-          <Link to="/">Home</Link> · Teacher area
+          <Link to="/">{t('teacherDashboard.crumbsHome')}</Link> ·{' '}
+          {t('teacherDashboard.crumbsArea')}
         </div>
         <Row justify="between">
           <Row>
@@ -86,22 +83,22 @@ export function TeacherDashboard() {
             </div>
           </Row>
           <Button onClick={() => navigate(`/teacher/${teacher.id}/invite`)}>
-            + Invite a student
+            {t('teacherDashboard.inviteStudent')}
           </Button>
         </Row>
       </section>
 
       <nav className={styles.tabs} role="tablist">
-        {TAB_DEFS.map((t) => (
+        {TAB_DEFS.map((tDef) => (
           <button
-            key={t.key}
+            key={tDef.key}
             role="tab"
-            aria-selected={tab === t.key}
-            className={`${styles.tab} ${tab === t.key ? styles.tabActive : ''}`}
-            onClick={() => setTab(t.key)}
+            aria-selected={tab === tDef.key}
+            className={`${styles.tab} ${tab === tDef.key ? styles.tabActive : ''}`}
+            onClick={() => setTab(tDef.key)}
           >
-            {t.label}
-            <span className={styles.tabCount}>({grouped[t.key].length})</span>
+            {t(`teacherDashboard.tabs.${tDef.labelKey}`)}
+            <span className={styles.tabCount}>({grouped[tDef.key].length})</span>
           </button>
         ))}
       </nav>
@@ -122,12 +119,20 @@ function RelationshipGrid({
   teacherId: string
   pending?: boolean
 }) {
+  const { t } = useTranslation()
+
   if (rows.length === 0) {
     return (
-      <EmptyState title={pending ? 'No pending invites' : 'No active students yet'}>
+      <EmptyState
+        title={
+          pending
+            ? t('teacherDashboard.empty.noPending')
+            : t('teacherDashboard.empty.noActive')
+        }
+      >
         {pending
-          ? 'Send an invite to bring a student on board.'
-          : 'Once a student accepts your invite, they will appear here.'}
+          ? t('teacherDashboard.empty.noPendingBody')
+          : t('teacherDashboard.empty.noActiveBody')}
       </EmptyState>
     )
   }
@@ -136,6 +141,11 @@ function RelationshipGrid({
       {rows.map((rel) => {
         const student = getUserById(rel.studentId)
         if (!student) return null
+        const meta = pending
+          ? t('teacherDashboard.statusMeta.invitedAgo', { time: formatRelative(rel.invitedAt) })
+          : t('teacherDashboard.statusMeta.activeSince', {
+              time: formatRelative(rel.respondedAt ?? rel.invitedAt),
+            })
         return (
           <StudentCard
             key={rel.id}
@@ -145,16 +155,12 @@ function RelationshipGrid({
               <>
                 <div className={styles.statusRow}>
                   <StatusPill status={rel.status} />
-                  <span className="muted tiny">
-                    {pending
-                      ? `Invited ${formatRelative(rel.invitedAt)}`
-                      : `Active since ${formatRelative(rel.respondedAt ?? rel.invitedAt)}`}
-                  </span>
+                  <span className="muted tiny">{meta}</span>
                 </div>
                 {rel.message && <div className={styles.relMessage}>{rel.message}</div>}
               </>
             }
-            footer={<span className={styles.viewProfile}>View profile →</span>}
+            footer={<span className={styles.viewProfile}>{t('teacherDashboard.viewProfile')}</span>}
           />
         )
       })}
@@ -169,10 +175,12 @@ function PastList({
   rows: TeachingRelationship[]
   teacherId: string
 }) {
+  const { t } = useTranslation()
+
   if (rows.length === 0) {
     return (
-      <EmptyState title="No past relationships yet">
-        Declined or revoked relationships will appear here.
+      <EmptyState title={t('teacherDashboard.empty.noPast')}>
+        {t('teacherDashboard.empty.noPastBody')}
       </EmptyState>
     )
   }
@@ -182,7 +190,7 @@ function PastList({
         const student = getUserById(rel.studentId)
         if (!student) return null
         if (rel.status === 'PENDING' || rel.status === 'ACCEPTED') return null
-        const reason = PAST_REASON[rel.status as PastStatus]
+        const reason = t(`teacherDashboard.pastReasons.${rel.status as PastStatus}`)
         return (
           <Card key={rel.id}>
             <Row justify="between">
@@ -210,11 +218,11 @@ function PastList({
 function formatRelative(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime()
   const days = Math.round(ms / 86_400_000)
-  if (days < 1) return 'today'
-  if (days === 1) return 'yesterday'
-  if (days < 30) return `${days}d ago`
+  if (days < 1) return 'hoje'
+  if (days === 1) return 'ontem'
+  if (days < 30) return `${days}d`
   const months = Math.round(days / 30)
-  if (months < 12) return `${months}mo ago`
+  if (months < 12) return `${months} meses`
   const years = Math.round(months / 12)
-  return `${years}y ago`
+  return `${years} anos`
 }

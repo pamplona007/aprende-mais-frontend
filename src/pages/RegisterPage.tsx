@@ -1,7 +1,10 @@
 import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { EmptyState } from '../components/EmptyState'
 import styles from './auth.module.css'
 
 export function RegisterPage() {
+  const { t } = useTranslation()
   return (
     <div className={styles.shell}>
       <div className={styles.card}>
@@ -10,22 +13,28 @@ export function RegisterPage() {
             Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
           </h1>
           <p className="muted" style={{ margin: 0 }}>
-            Create your account
+            {t('auth.registerTitle')}
           </p>
         </header>
 
         <div className={styles.form}>
-          <div className="empty-state" style={{ marginBottom: 0 }}>
-            <div className="empty-state__title">Registration coming soon</div>
-            <p>For this demo, please use one of the demo accounts on the login page.</p>
-          </div>
+          <EmptyState
+            title={t('auth.registerComingSoon')}
+            action={
+              <Link to="/login" className="muted">
+                {t('auth.goToLogin')}
+              </Link>
+            }
+          >
+            {t('auth.registerComingSoonBody')}
+          </EmptyState>
         </div>
 
         <footer className={styles.footer}>
           <p className="muted tiny" style={{ margin: 0 }}>
-            Already have an account?{' '}
+            {t('auth.alreadyHaveAccount')}{' '}
             <Link to="/login" style={{ color: 'var(--color-primary-strong)' }}>
-              Sign in
+              {t('auth.signIn')}
             </Link>
           </p>
         </footer>

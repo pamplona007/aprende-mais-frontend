@@ -1,9 +1,3 @@
-// AuthProvider — context that owns the current user.
-//
-// Real auth (sessions, bcrypt, JWTs) is out of scope for the demo. The login
-// page validates against hardcoded credentials (defined here) and the result
-// is persisted to localStorage so a page reload keeps you signed in.
-
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { UserSummary } from '../types'
@@ -31,8 +25,6 @@ function clearStorage() {
   localStorage.removeItem(STORAGE_KEY)
 }
 
-// ─── Context ────────────────────────────────────────────────────
-
 export type LoginError = 'invalid_credentials' | 'unknown'
 
 export interface AuthContextValue {
@@ -44,10 +36,8 @@ export interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Lazy init from localStorage so the first render is correct.
   const [currentUser, setCurrentUser] = useState<UserSummary | null>(loadFromStorage)
 
-  // Keep state in sync if another tab logs out.
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY) setCurrentUser(loadFromStorage())

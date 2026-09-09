@@ -3,32 +3,31 @@ import { Link, useNavigate, useLocation } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
 import { postLoginPath } from '../auth/postLoginPath'
 import { useAuth, type LoginError } from '../auth/AuthProvider'
+import { CREDENTIALS } from '../auth/credentials'
 import { Button } from '../components/Button'
 import { Field } from '../components/Field'
 import { Callout } from '../components/Callout'
 import { Row } from '../components/Row'
 import styles from './auth.module.css'
 
-const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Enter a valid email'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-type LoginFormValues = z.infer<typeof loginSchema>
-
-// Hardcoded credentials shown as a hint in the demo. Hidden in production.
-const DEMO_HINTS: { role: 'Teacher' | 'Student'; email: string; password: string }[] = [
-  { role: 'Teacher', email: 'paula@aprende.mais', password: 'teacher123' },
-  { role: 'Student', email: 'ana@aprende.mais', password: 'student123' },
-]
-
 export function LoginPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const { currentUser, login } = useAuth()
   const [authError, setAuthError] = useState<LoginError | null>(null)
+
+  const loginSchema = z.object({
+    email: z
+      .string()
+      .min(1, t('validation.emailRequired'))
+      .email(t('validation.emailInvalid')),
+    password: z.string().min(1, t('validation.passwordRequired')),
+  })
+  type LoginFormValues = z.infer<typeof loginSchema>
 
   const {
     register,
@@ -43,7 +42,6 @@ export function LoginPage() {
 
   const emailValue = watch('email')
 
-  // If the user is already signed in, bounce them out of the login page.
   useEffect(() => {
     if (currentUser) navigate(postLoginPath(currentUser), { replace: true })
   }, [currentUser, navigate])
@@ -64,10 +62,14 @@ export function LoginPage() {
     setValue('password', password, { shouldValidate: true })
   }
 
-  // react-hook-form's register() returns { onChange, onBlur, ref, name }.
-  // Field.inputProps forwards those onto the underlying <input>.
   const emailReg = register('email')
   const passwordReg = register('password')
+
+  const demoHints = CREDENTIALS.map((c) => ({
+    role: c.userId.startsWith('t_') ? t('auth.teacher') : t('auth.student'),
+    email: c.email,
+    password: c.password,
+  }))
 
   return (
     <div className={styles.shell}>
@@ -77,13 +79,13 @@ export function LoginPage() {
             Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
           </h1>
           <p className="muted" style={{ margin: 0 }}>
-            Sign in to your account
+            {t('auth.loginTitle')}
           </p>
         </header>
 
         <form className={styles.form} onSubmit={onSubmit} noValidate>
           <Field
-            label="Email"
+            label={t('auth.emailLabel')}
             error={errors.email?.message}
             inputProps={{
               type: 'email',
@@ -95,7 +97,7 @@ export function LoginPage() {
             }}
           />
           <Field
-            label="Password"
+            label={t('auth.passwordLabel')}
             error={errors.password?.message}
             inputProps={{
               type: 'password',
@@ -109,21 +111,21 @@ export function LoginPage() {
 
           {authError === 'invalid_credentials' && (
             <Callout tone="warning" role="alert">
-              Wrong email or password. Try the demo credentials below.
+              {t('auth.invalidCredentials')}
             </Callout>
           )}
 
           <Button type="submit" disabled={isSubmitting}>
-            Sign in
+            {t('auth.submitLogin')}
           </Button>
         </form>
 
         <footer className={styles.footer}>
           <p className="muted tiny" style={{ marginBottom: 'var(--space-2)' }}>
-            Demo credentials (click to autofill):
+            {t('auth.demoHint')}
           </p>
           <Row gap="sm" className={styles.demoList} align="stretch">
-            {DEMO_HINTS.map((hint) => (
+            {demoHints.map((hint) => (
               <button
                 key={hint.email}
                 type="button"
@@ -136,14 +138,14 @@ export function LoginPage() {
             ))}
           </Row>
           <p className="muted tiny" style={{ marginTop: 'var(--space-4)', marginBottom: 0 }}>
-            New here?{' '}
+            {t('auth.newHere')}{' '}
             <Link to="/register" style={{ color: 'var(--color-primary-strong)' }}>
-              Create an account
+              {t('auth.createAccount')}
             </Link>
           </p>
           {emailValue && (
             <p className={styles.typingHint}>
-              Currently typing: <code>{emailValue}</code>
+              {t('auth.typingHint')} <code>{emailValue}</code>
             </p>
           )}
         </footer>

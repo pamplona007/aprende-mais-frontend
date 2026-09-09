@@ -4,12 +4,12 @@ import { BrowserRouter } from 'react-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { App } from './App'
 import { AuthProvider } from './auth/AuthProvider'
+import './i18n'
 import './styles.css'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Real calls aren't wired up yet; these are sensible defaults for later.
       retry: 1,
       staleTime: 30_000,
       refetchOnWindowFocus: false,

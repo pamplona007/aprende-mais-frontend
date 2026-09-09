@@ -14,8 +14,6 @@ interface BaseProps {
   className?: string
 }
 
-// InputProps is `InputHTMLAttributes` minus `ref`, then we add `ref?: Ref<HTMLInputElement>`
-// back as a real prop so callers can pass register's ref directly. Same for textarea.
 export type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'ref'> & {
   ref?: Ref<HTMLInputElement>
 }
@@ -33,11 +31,6 @@ interface TextareaFieldProps extends BaseProps {
   inputProps?: TextareaProps
 }
 
-/**
- * A labelled form field. Renders the wrapper (label + input + error/hint).
- * Pass the actual input props via `inputProps` — keeps the field dumb while
- * still letting react-hook-form's `register()` drive the input via a ref.
- */
 export function Field(props: InputFieldProps | TextareaFieldProps) {
   const generatedId = useId()
   const id = props.inputProps?.id ?? generatedId
@@ -80,9 +73,6 @@ export function Field(props: InputFieldProps | TextareaFieldProps) {
   )
 }
 
-// react-hook-form's register() returns a ref we need to forward to the <input>.
-// The ForwardedInput wrapper lets us do that without making the parent component
-// pass a ref through props manually.
 const InputForwarded = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
   function InputForwarded(props, ref) {
     return <input ref={ref} {...props} />

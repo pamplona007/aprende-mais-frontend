@@ -1,7 +1,3 @@
-// Shared types — mirrored from the backend's API responses.
-// Kept hand-written here (no codegen) so the frontend can iterate independently
-// while the backend is still in flux.
-
 export type UserRole = 'STUDENT' | 'GUARDIAN' | 'TEACHER' | 'ADMIN';
 
 export interface UserSummary {

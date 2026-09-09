@@ -17,7 +17,6 @@ export function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
 
-        {/* Teacher area — gated to TEACHER role only. */}
         <Route
           path="teacher/:teacherId"
           element={
@@ -43,7 +42,6 @@ export function App() {
           }
         />
 
-        {/* Student area — gated to STUDENT role only. */}
         <Route
           path="student/:studentId"
           element={

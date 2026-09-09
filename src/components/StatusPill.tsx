@@ -1,12 +1,13 @@
+import { useTranslation } from 'react-i18next'
 import type { TeachingRelationshipStatus } from '../types'
 import styles from './StatusPill.module.css'
 
-const LABELS: Record<TeachingRelationshipStatus, string> = {
-  PENDING: 'Pending',
-  ACCEPTED: 'Active',
-  DECLINED: 'Declined',
-  REVOKED_BY_TEACHER: 'Withdrawn',
-  REVOKED_BY_STUDENT: 'Revoked',
+const STATUS_KEY: Record<TeachingRelationshipStatus, string> = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DECLINED: 'DECLINED',
+  REVOKED_BY_TEACHER: 'REVOKED_BY_TEACHER',
+  REVOKED_BY_STUDENT: 'REVOKED_BY_STUDENT',
 }
 
 const CLASS_FOR: Record<TeachingRelationshipStatus, string> = {
@@ -18,5 +19,10 @@ const CLASS_FOR: Record<TeachingRelationshipStatus, string> = {
 }
 
 export function StatusPill({ status }: { status: TeachingRelationshipStatus }) {
-  return <span className={`${styles.pill} ${CLASS_FOR[status]}`}>{LABELS[status]}</span>
+  const { t } = useTranslation()
+  return (
+    <span className={`${styles.pill} ${CLASS_FOR[status]}`}>
+      {t(`status.${STATUS_KEY[status]}`)}
+    </span>
+  )
 }
