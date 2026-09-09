@@ -1,6 +1,11 @@
 import { Link, useNavigate, useParams } from 'react-router'
 import { getProfileByStudentId, getRelationshipsForTeacher, getUserById } from '../mocks'
 import { Avatar } from '../components/Avatar'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { EmptyState } from '../components/EmptyState'
+import { Row } from '../components/Row'
+import { Stack } from '../components/Stack'
 import { StatusPill } from '../components/StatusPill'
 import styles from './StudentProfilePage.module.css'
 
@@ -22,12 +27,16 @@ export function StudentProfilePage() {
 
   if (!teacher || !student) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">Student not found</div>
-        <Link to="/" className="btn btn--primary">
-          Go home
-        </Link>
-      </div>
+      <Stack gap="md">
+        <EmptyState
+          title="Student not found"
+          action={
+            <Button to="/" variant="ghost">
+              Go home
+            </Button>
+          }
+        />
+      </Stack>
     )
   }
 
@@ -36,7 +45,7 @@ export function StudentProfilePage() {
     : null
 
   return (
-    <div className="stack stack--lg">
+    <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
           <Link to="/">Home</Link> ·{' '}
@@ -59,18 +68,16 @@ export function StudentProfilePage() {
         </div>
       </section>
 
-      <section className="stack">
+      <Stack gap="md">
         <h2>Learning profile</h2>
         <div className={styles.cardsRow}>
-          <div className="card">
-            <div className="card__title">Level</div>
+          <Card title="Level">
             <div className={styles.bigNumber}>{profile?.learningLevel ?? '—'}</div>
             <p className="muted tiny" style={{ margin: 0 }}>
               Higher = more advanced
             </p>
-          </div>
-          <div className="card">
-            <div className="card__title">Accessibility</div>
+          </Card>
+          <Card title="Accessibility">
             {profile && Object.keys(profile.accessibility).length > 0 ? (
               <KeyValueList data={profile.accessibility} />
             ) : (
@@ -78,9 +85,8 @@ export function StudentProfilePage() {
                 None set
               </p>
             )}
-          </div>
-          <div className="card">
-            <div className="card__title">Preferences</div>
+          </Card>
+          <Card title="Preferences">
             {profile && Object.keys(profile.preferences).length > 0 ? (
               <KeyValueList data={profile.preferences} />
             ) : (
@@ -88,21 +94,19 @@ export function StudentProfilePage() {
                 None set
               </p>
             )}
-          </div>
+          </Card>
         </div>
-      </section>
+      </Stack>
 
       {profile?.notes && (
-        <section className="card card--muted">
-          <div className="card__title">Teacher notes</div>
+        <Card variant="muted" title="Teacher notes">
           <p style={{ margin: 0 }}>{profile.notes}</p>
-        </section>
+        </Card>
       )}
 
       {relationship && (
-        <section className="card">
-          <div className="card__title">Relationship</div>
-          <div className={styles.relSection}>
+        <Card title="Relationship">
+          <Stack gap="md">
             <div className={styles.relMeta}>
               <StatusPill status={relationship.status} />
               <span className="muted tiny">Invited {formatDate(relationship.invitedAt)}</span>
@@ -116,18 +120,15 @@ export function StudentProfilePage() {
             {relationship.message && (
               <div className={styles.relMessage}>Invite message: “{relationship.message}”</div>
             )}
-            <div className="row">
-              <button
-                className="btn btn--ghost btn--small"
-                onClick={() => navigate(`/teacher/${teacher.id}`)}
-              >
+            <Row>
+              <Button variant="ghost" size="sm" onClick={() => navigate(`/teacher/${teacher.id}`)}>
                 ← Back to dashboard
-              </button>
-            </div>
-          </div>
-        </section>
+              </Button>
+            </Row>
+          </Stack>
+        </Card>
       )}
-    </div>
+    </Stack>
   )
 }
 

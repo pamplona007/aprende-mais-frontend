@@ -1,0 +1,20 @@
+.callout {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.info {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+}
+
+.warning {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}

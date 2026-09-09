@@ -5,6 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { postLoginPath } from '../auth/postLoginPath'
 import { useAuth, type LoginError } from '../auth/AuthProvider'
+import { Button } from '../components/Button'
+import { Field } from '../components/Field'
+import { Callout } from '../components/Callout'
+import { Row } from '../components/Row'
 import styles from './auth.module.css'
 
 const loginSchema = z.object({
@@ -60,6 +64,11 @@ export function LoginPage() {
     setValue('password', password, { shouldValidate: true })
   }
 
+  // react-hook-form's register() returns { onChange, onBlur, ref, name }.
+  // Field.inputProps forwards those onto the underlying <input>.
+  const emailReg = register('email')
+  const passwordReg = register('password')
+
   return (
     <div className={styles.shell}>
       <div className={styles.card}>
@@ -73,52 +82,47 @@ export function LoginPage() {
         </header>
 
         <form className={styles.form} onSubmit={onSubmit} noValidate>
-          <div className="field">
-            <label className="field__label" htmlFor="email">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              className="field__input"
-              aria-invalid={Boolean(errors.email)}
-              {...register('email')}
-            />
-            {errors.email && <span className={styles.error}>{errors.email.message}</span>}
-          </div>
-
-          <div className="field">
-            <label className="field__label" htmlFor="password">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              className="field__input"
-              aria-invalid={Boolean(errors.password)}
-              {...register('password')}
-            />
-            {errors.password && <span className={styles.error}>{errors.password.message}</span>}
-          </div>
+          <Field
+            label="Email"
+            error={errors.email?.message}
+            inputProps={{
+              type: 'email',
+              autoComplete: 'email',
+              name: emailReg.name,
+              ref: emailReg.ref,
+              onChange: emailReg.onChange,
+              onBlur: emailReg.onBlur,
+            }}
+          />
+          <Field
+            label="Password"
+            error={errors.password?.message}
+            inputProps={{
+              type: 'password',
+              autoComplete: 'current-password',
+              name: passwordReg.name,
+              ref: passwordReg.ref,
+              onChange: passwordReg.onChange,
+              onBlur: passwordReg.onBlur,
+            }}
+          />
 
           {authError === 'invalid_credentials' && (
-            <div className="callout callout--warning" role="alert">
+            <Callout tone="warning" role="alert">
               Wrong email or password. Try the demo credentials below.
-            </div>
+            </Callout>
           )}
 
-          <button type="submit" className="btn btn--primary" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting}>
             Sign in
-          </button>
+          </Button>
         </form>
 
         <footer className={styles.footer}>
           <p className="muted tiny" style={{ marginBottom: 'var(--space-2)' }}>
             Demo credentials (click to autofill):
           </p>
-          <div className={styles.demoList}>
+          <Row gap="sm" className={styles.demoList} align="stretch">
             {DEMO_HINTS.map((hint) => (
               <button
                 key={hint.email}
@@ -130,14 +134,18 @@ export function LoginPage() {
                 <span className="muted tiny">{hint.email}</span>
               </button>
             ))}
-          </div>
+          </Row>
           <p className="muted tiny" style={{ marginTop: 'var(--space-4)', marginBottom: 0 }}>
             New here?{' '}
             <Link to="/register" style={{ color: 'var(--color-primary-strong)' }}>
               Create an account
             </Link>
           </p>
-          {emailValue && <p className={styles.typingHint}>Currently typing: <code>{emailValue}</code></p>}
+          {emailValue && (
+            <p className={styles.typingHint}>
+              Currently typing: <code>{emailValue}</code>
+            </p>
+          )}
         </footer>
       </div>
     </div>

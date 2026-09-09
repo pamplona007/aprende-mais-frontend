@@ -1,5 +1,8 @@
 import { Link, useParams } from 'react-router'
 import { getUserById } from '../mocks'
+import { Button } from '../components/Button'
+import { EmptyState } from '../components/EmptyState'
+import { Stack } from '../components/Stack'
 import styles from './StudentDashboard.module.css'
 
 // Placeholder while the student dashboard is built. Kept lightweight on purpose:
@@ -10,34 +13,40 @@ export function StudentDashboard() {
 
   if (!student) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">Student not found</div>
-        <Link to="/" className="btn btn--primary">
-          Go home
-        </Link>
-      </div>
+      <Stack gap="md">
+        <EmptyState
+          title="Student not found"
+          action={
+            <Button to="/" variant="ghost">
+              Go home
+            </Button>
+          }
+        />
+      </Stack>
     )
   }
 
   return (
-    <div className="stack stack--lg">
+    <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
           <Link to="/">Home</Link> · Student area
         </div>
-        <h1 className={styles.hello}>
-          Hi, {student.displayName.split(' ')[0]} 👋
-        </h1>
+        <h1 className={styles.hello}>Hi, {student.displayName.split(' ')[0]} 👋</h1>
         <p>This is where your lessons and teacher invites will live.</p>
       </section>
 
-      <div className="empty-state">
-        <div className="empty-state__title">Student dashboard coming soon</div>
-        <p>
-          The teacher area is fully wired; the student side (accepting invites, doing lessons,
-          seeing progress) is on the way.
-        </p>
-      </div>
-    </div>
+      <EmptyState
+        title="Student dashboard coming soon"
+        action={
+          <Link to="/" className="muted">
+            ← Back to home
+          </Link>
+        }
+      >
+        The teacher area is fully wired; the student side (accepting invites, doing lessons,
+        seeing progress) is on the way.
+      </EmptyState>
+    </Stack>
   )
 }

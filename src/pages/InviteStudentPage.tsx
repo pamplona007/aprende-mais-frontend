@@ -1,6 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router'
 import { getRelationshipsForTeacher, getUserById, searchStudents } from '../mocks'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { EmptyState } from '../components/EmptyState'
+import { Field } from '../components/Field'
+import { Row } from '../components/Row'
+import { Stack } from '../components/Stack'
 import { StudentCard } from '../components/StudentCard'
 import styles from './InviteStudentPage.module.css'
 
@@ -29,17 +35,21 @@ export function InviteStudentPage() {
 
   if (!teacher) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">Teacher not found</div>
-        <Link to="/" className="btn btn--primary">
-          Go home
-        </Link>
-      </div>
+      <Stack gap="md">
+        <EmptyState
+          title="Teacher not found"
+          action={
+            <Button to="/" variant="ghost">
+              Go home
+            </Button>
+          }
+        />
+      </Stack>
     )
   }
 
   return (
-    <div className="stack stack--lg">
+    <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
           <Link to="/">Home</Link> ·{' '}
@@ -49,30 +59,24 @@ export function InviteStudentPage() {
         <p>Search for a student by name or email, then send them an invite.</p>
       </section>
 
-      <section className="stack">
-        <div className="field">
-          <label className="field__label" htmlFor="search">
-            Find student
-          </label>
-          <input
-            id="search"
-            className={styles.searchInput}
-            placeholder="Type a name or email…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            autoFocus
-          />
-        </div>
+      <Stack gap="md">
+        <Field
+          label="Find student"
+          inputProps={{
+            id: 'search',
+            placeholder: 'Type a name or email…',
+            value: query,
+            onChange: (e) => setQuery(e.target.value),
+            autoFocus: true,
+          }}
+        />
 
-        <div className="stack">
+        <Stack gap="md">
           {candidates.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-state__title">No matching students</div>
-              <p className="muted">
-                Either nobody matches your search, or every matching student already has an open
-                relationship with you.
-              </p>
-            </div>
+            <EmptyState title="No matching students">
+              Either nobody matches your search, or every matching student already has an open
+              relationship with you.
+            </EmptyState>
           ) : (
             candidates.map((s) => (
               <StudentCard
@@ -83,27 +87,24 @@ export function InviteStudentPage() {
               />
             ))
           )}
-        </div>
-      </section>
+        </Stack>
+      </Stack>
 
       {selected && (
-        <section className="card">
-          <div className="card__title">Send invite to {selected.displayName}</div>
-          <div className="field">
-            <label className="field__label" htmlFor="message">
-              Message (optional)
-            </label>
-            <textarea
-              id="message"
-              className={`field__textarea ${styles.textarea}`}
-              placeholder="Say hi and explain how you'd like to help…"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-          </div>
-          <div className="row">
-            <button
-              className="btn btn--primary"
+        <Card title={`Send invite to ${selected.displayName}`}>
+          <Field
+            as="textarea"
+            label="Message (optional)"
+            inputProps={{
+              id: 'message',
+              placeholder: "Say hi and explain how you'd like to help…",
+              value: message,
+              onChange: (e) => setMessage(e.target.value),
+              className: styles.textarea,
+            }}
+          />
+          <Row>
+            <Button
               onClick={() => {
                 // Wired to the real API in a follow-up; for now this just navigates back.
                 // See src/api/teaching.ts → sendInvite().
@@ -116,19 +117,19 @@ export function InviteStudentPage() {
               }}
             >
               Send invite
-            </button>
-            <button
-              className="btn btn--ghost"
+            </Button>
+            <Button
+              variant="ghost"
               onClick={() => {
                 setSelectedId(null)
                 setMessage('')
               }}
             >
               Cancel
-            </button>
-          </div>
-        </section>
+            </Button>
+          </Row>
+        </Card>
       )}
-    </div>
+    </Stack>
   )
 }

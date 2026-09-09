@@ -1,13 +1,13 @@
 /* Aprende+ global styles
  * ----------------------------------------------------------------
- * This file holds:
+ * This file holds ONLY:
  *   - Design tokens (CSS custom properties) — colors, shape, elevation, spacing, type
  *   - Resets & base typography
- *   - Shared utility classes used across multiple components (.btn, .card,
- *     .stack, .row, .field, .pill, .muted, .tiny, .empty-state, .callout,
- *     .page-header, .grid-cards)
+ *   - Truly shared one-line text helpers (.muted, .tiny)
+ *   - .page-header + .page-header__crumbs (used inline in every page, simple)
+ *   - .code styling
  *
- * Component-specific styles live in *.module.css files next to each component.
+ * Everything else lives in *.module.css next to its component.
  */
 
 :root {
@@ -140,156 +140,7 @@ code {
   border-radius: 4px;
 }
 
-/* ── Buttons ─────────────────────────────────────────── */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--space-3) var(--space-5);
-  border-radius: var(--radius-pill);
-  font-weight: var(--font-weight-bold);
-  font-size: 0.95rem;
-  transition:
-    transform 0.05s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  text-decoration: none;
-}
-.btn:active {
-  transform: translateY(1px);
-}
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.btn--primary {
-  background: var(--color-primary);
-  color: var(--color-text-on-primary);
-  box-shadow: 0 2px 0 var(--color-primary-strong);
-}
-.btn--primary:hover {
-  background: var(--color-primary-strong);
-  text-decoration: none;
-  color: var(--color-text-on-primary);
-}
-.btn--ghost {
-  background: transparent;
-  color: var(--color-text-muted);
-  border: 2px solid var(--color-border);
-  box-shadow: none;
-}
-.btn--ghost:hover {
-  background: var(--color-surface-muted);
-  text-decoration: none;
-  color: var(--color-text);
-}
-.btn--danger {
-  background: var(--color-danger-soft);
-  color: var(--color-danger);
-  box-shadow: none;
-}
-.btn--danger:hover {
-  background: var(--color-danger);
-  color: var(--color-text-on-primary);
-  text-decoration: none;
-}
-.btn--small {
-  padding: var(--space-2) var(--space-3);
-  font-size: 0.8rem;
-}
-
-/* ── Card ────────────────────────────────────────────── */
-
-.card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  padding: var(--space-5);
-}
-.card--muted {
-  background: var(--color-surface-muted);
-  border-color: transparent;
-  box-shadow: none;
-}
-.card__title {
-  font-size: 1rem;
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-text-muted);
-  margin: 0 0 var(--space-3) 0;
-}
-
-/* ── Form fields ─────────────────────────────────────── */
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-.field__label {
-  font-size: 0.85rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.field__input,
-.field__textarea {
-  width: 100%;
-  padding: var(--space-3) var(--space-4);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text);
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-.field__input:focus,
-.field__textarea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px var(--color-primary-soft);
-}
-.field__textarea {
-  min-height: 80px;
-  resize: vertical;
-  font-family: inherit;
-}
-
-/* ── Layout helpers ──────────────────────────────────── */
-
-.stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-.stack--lg {
-  gap: var(--space-5);
-}
-
-.row {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  flex-wrap: wrap;
-}
-.row--between {
-  justify-content: space-between;
-}
-
-.grid-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: var(--space-4);
-}
+/* ── Page header (used inline by every page; tiny enough to stay global) */
 
 .page-header {
   margin-bottom: var(--space-5);
@@ -300,34 +151,7 @@ code {
   margin-bottom: var(--space-2);
 }
 
-/* ── States ──────────────────────────────────────────── */
-
-.empty-state {
-  padding: var(--space-6);
-  text-align: center;
-  color: var(--color-text-muted);
-  background: var(--color-surface-muted);
-  border-radius: var(--radius-lg);
-}
-.empty-state__title {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-
-.callout {
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  background: var(--color-primary-soft);
-  color: var(--color-primary-strong);
-  font-size: 0.9rem;
-}
-.callout--warning {
-  background: var(--color-warning-soft);
-  color: var(--color-warning);
-}
-
-/* ── Text helpers ────────────────────────────────────── */
+/* ── One-line text helpers ────────────────────────────── */
 
 .muted {
   color: var(--color-text-muted);

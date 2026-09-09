@@ -5,6 +5,12 @@ import type { TeachingRelationship } from '../types'
 import { StatusPill } from '../components/StatusPill'
 import { Avatar } from '../components/Avatar'
 import { StudentCard } from '../components/StudentCard'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { EmptyState } from '../components/EmptyState'
+import { GridCards } from '../components/GridCards'
+import { Row } from '../components/Row'
+import { Stack } from '../components/Stack'
 import styles from './TeacherDashboard.module.css'
 
 type TabKey = 'ACTIVE' | 'PENDING' | 'PAST'
@@ -48,24 +54,29 @@ export function TeacherDashboard() {
 
   if (!teacher) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">Teacher not found</div>
-        <p>Pick a teacher from the home page.</p>
-        <Link to="/" className="btn btn--primary">
-          Go home
-        </Link>
-      </div>
+      <Stack gap="md">
+        <EmptyState
+          title="Teacher not found"
+          action={
+            <Button to="/" variant="ghost">
+              Go home
+            </Button>
+          }
+        >
+          Pick a teacher from the home page.
+        </EmptyState>
+      </Stack>
     )
   }
 
   return (
-    <div className="stack stack--lg">
+    <Stack gap="lg">
       <section className="page-header">
         <div className="page-header__crumbs">
           <Link to="/">Home</Link> · Teacher area
         </div>
-        <div className="row row--between">
-          <div className="row">
+        <Row justify="between">
+          <Row>
             <Avatar user={teacher} size="lg" />
             <div>
               <h1 style={{ margin: 0 }}>{teacher.displayName}</h1>
@@ -73,14 +84,11 @@ export function TeacherDashboard() {
                 {teacher.email}
               </p>
             </div>
-          </div>
-          <button
-            className="btn btn--primary"
-            onClick={() => navigate(`/teacher/${teacher.id}/invite`)}
-          >
+          </Row>
+          <Button onClick={() => navigate(`/teacher/${teacher.id}/invite`)}>
             + Invite a student
-          </button>
-        </div>
+          </Button>
+        </Row>
       </section>
 
       <nav className={styles.tabs} role="tablist">
@@ -98,63 +106,33 @@ export function TeacherDashboard() {
         ))}
       </nav>
 
-      {tab === 'ACTIVE' && <ActiveGrid rows={grouped.ACTIVE} teacherId={teacher.id} />}
-      {tab === 'PENDING' && <PendingGrid rows={grouped.PENDING} teacherId={teacher.id} />}
+      {tab === 'ACTIVE' && <RelationshipGrid rows={grouped.ACTIVE} teacherId={teacher.id} />}
+      {tab === 'PENDING' && <RelationshipGrid rows={grouped.PENDING} teacherId={teacher.id} pending />}
       {tab === 'PAST' && <PastList rows={grouped.PAST} teacherId={teacher.id} />}
-    </div>
+    </Stack>
   )
 }
 
-function ActiveGrid({ rows, teacherId }: { rows: TeachingRelationship[]; teacherId: string }) {
-  return (
-    <Grid
-      rows={rows}
-      teacherId={teacherId}
-      emptyTitle="No active students yet"
-      emptyBody="Once a student accepts your invite, they will appear here."
-      showMessage
-    />
-  )
-}
-
-function PendingGrid({ rows, teacherId }: { rows: TeachingRelationship[]; teacherId: string }) {
-  return (
-    <Grid
-      rows={rows}
-      teacherId={teacherId}
-      emptyTitle="No pending invites"
-      emptyBody="Send an invite to bring a student on board."
-      showMessage
-      pending
-    />
-  )
-}
-
-function Grid({
+function RelationshipGrid({
   rows,
   teacherId,
-  emptyTitle,
-  emptyBody,
-  showMessage,
   pending,
 }: {
   rows: TeachingRelationship[]
   teacherId: string
-  emptyTitle: string
-  emptyBody: string
-  showMessage: boolean
   pending?: boolean
 }) {
   if (rows.length === 0) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">{emptyTitle}</div>
-        <p>{emptyBody}</p>
-      </div>
+      <EmptyState title={pending ? 'No pending invites' : 'No active students yet'}>
+        {pending
+          ? 'Send an invite to bring a student on board.'
+          : 'Once a student accepts your invite, they will appear here.'}
+      </EmptyState>
     )
   }
   return (
-    <div className={styles.grid}>
+    <GridCards>
       {rows.map((rel) => {
         const student = getUserById(rel.studentId)
         if (!student) return null
@@ -173,16 +151,14 @@ function Grid({
                       : `Active since ${formatRelative(rel.respondedAt ?? rel.invitedAt)}`}
                   </span>
                 </div>
-                {showMessage && rel.message && (
-                  <div className={styles.relMessage}>{rel.message}</div>
-                )}
+                {rel.message && <div className={styles.relMessage}>{rel.message}</div>}
               </>
             }
-            footer={<span className="btn btn--ghost btn--small">View profile →</span>}
+            footer={<span className={styles.viewProfile}>View profile →</span>}
           />
         )
       })}
-    </div>
+    </GridCards>
   )
 }
 
@@ -195,23 +171,22 @@ function PastList({
 }) {
   if (rows.length === 0) {
     return (
-      <div className="empty-state">
-        <div className="empty-state__title">No past relationships yet</div>
-        <p>Declined or revoked relationships will appear here.</p>
-      </div>
+      <EmptyState title="No past relationships yet">
+        Declined or revoked relationships will appear here.
+      </EmptyState>
     )
   }
   return (
-    <div className="stack">
+    <Stack gap="md">
       {rows.map((rel) => {
         const student = getUserById(rel.studentId)
         if (!student) return null
         if (rel.status === 'PENDING' || rel.status === 'ACCEPTED') return null
         const reason = PAST_REASON[rel.status as PastStatus]
         return (
-          <div key={rel.id} className={styles.pastCard}>
-            <div className={styles.pastRow}>
-              <div className="row">
+          <Card key={rel.id}>
+            <Row justify="between">
+              <Row>
                 <Avatar user={student} size="sm" />
                 <div>
                   <Link to={`/teacher/${teacherId}/students/${student.id}`} style={{ color: 'inherit' }}>
@@ -219,16 +194,16 @@ function PastList({
                   </Link>
                   <div className="muted tiny">{student.email}</div>
                 </div>
-              </div>
-              <div className="row">
+              </Row>
+              <Row>
                 <StatusPill status={rel.status} />
                 <span className={styles.pastReason}>{reason}</span>
-              </div>
-            </div>
-          </div>
+              </Row>
+            </Row>
+          </Card>
         )
       })}
-    </div>
+    </Stack>
   )
 }
 

@@ -1,6 +1,7 @@
-import { Link, Navigate } from 'react-router'
+import { Navigate } from 'react-router'
 import { useAuth } from '../auth/AuthProvider'
 import { postLoginPath } from '../auth/postLoginPath'
+import { Button } from '../components/Button'
 import styles from './HomePage.module.css'
 
 export function HomePage() {
@@ -19,12 +20,10 @@ export function HomePage() {
           A learning platform for children with learning difficulties.
         </p>
         <div className={styles.cta}>
-          <Link to="/login" className="btn btn--primary">
-            Login
-          </Link>
-          <Link to="/register" className="btn btn--ghost">
+          <Button to="/login">Login</Button>
+          <Button to="/register" variant="ghost">
             Register
-          </Link>
+          </Button>
         </div>
       </section>
     </div>

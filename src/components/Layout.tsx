@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate, Outlet } from 'react-router'
 import { useAuth } from '../auth/AuthProvider'
 import { Avatar } from './Avatar'
+import { Button } from './Button'
 import styles from './Layout.module.css'
 
 export function Layout() {
@@ -50,13 +51,9 @@ export function Layout() {
                   <span className={styles.userRole}>{currentUser.role}</span>
                 </div>
               </div>
-              <button
-                type="button"
-                className={`btn btn--ghost btn--small ${styles.logoutBtn}`}
-                onClick={onLogout}
-              >
+              <Button variant="ghost" size="sm" onClick={onLogout}>
                 Log out
-              </button>
+              </Button>
             </>
           ) : (
             <>

@@ -87,3 +87,18 @@
   color: var(--color-text-muted);
   font-size: 0.8rem;
 }
+
+/* Visual "View profile →" affordance inside StudentCard's footer slot.
+   Pure presentation — the whole card is the clickable target. */
+.viewProfile {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
