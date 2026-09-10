@@ -1,5 +1,63 @@
-/* StudentDashboard — placeholder until the student-facing area is built. */
+.page {
+  min-height: 60vh;
+}
 
-.hello {
-  font-size: 2rem;
+.greeting {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.greetingTitle {
+  font-size: 1.6rem;
+  font-weight: var(--font-weight-black);
+  letter-spacing: -0.02em;
+}
+
+.greetingSubtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0 auto var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  width: max-content;
+  animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.lesson {
+  margin-top: var(--space-5);
+}
+
+.backBtn {
+  margin-bottom: var(--space-4);
+}
+
+.empty {
+  padding: var(--space-7) var(--space-5);
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--color-border);
 }

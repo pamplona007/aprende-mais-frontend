@@ -1,8 +1,12 @@
-import { Link, useParams } from 'react-router'
+import { useMemo, useState } from 'react'
+import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { getUserById } from '../mocks'
+import { getSubjectsForStudent, getUserById, mockStartLesson } from '../mocks'
+import type { Lesson, Subject } from '../types'
 import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
+import { JourneyTrack } from '../components/JourneyTrack'
+import { LessonPlayer } from '../components/LessonPlayer'
 import { Stack } from '../components/Stack'
 import styles from './StudentDashboard.module.css'
 
@@ -10,6 +14,13 @@ export function StudentDashboard() {
   const { t } = useTranslation()
   const { studentId } = useParams<{ studentId: string }>()
   const student = studentId ? getUserById(studentId) : undefined
+  const subjects = useMemo(
+    () => (studentId ? getSubjectsForStudent(studentId) : []),
+    [studentId],
+  )
+
+  // Active lesson session (the one the student is currently working on).
+  const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
 
   if (!student) {
     return (
@@ -26,29 +37,42 @@ export function StudentDashboard() {
     )
   }
 
-  return (
-    <Stack gap="lg">
-      <section className="page-header">
-        <div className="page-header__crumbs">
-          <Link to="/">{t('studentDashboard.crumbsHome')}</Link> ·{' '}
-          {t('studentDashboard.crumbsArea')}
+  const onIslandClick = (subject: Subject) => {
+    if (subject.status === 'LOCKED') return
+    const result = mockStartLesson(student.id, subject.id)
+    if (!result) return
+    setActiveLesson(result.lesson)
+  }
+
+  const exitLesson = () => setActiveLesson(null)
+  const completeLesson = () => setActiveLesson(null)
+
+  if (activeLesson) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.lesson}>
+          <LessonPlayer
+            lesson={activeLesson}
+            onComplete={completeLesson}
+            onExit={exitLesson}
+          />
         </div>
-        <h1 className={styles.hello}>
+      </div>
+    )
+  }
+
+  return (
+    <div className={styles.page}>
+      <section className={styles.greeting}>
+        <h1 className={styles.greetingTitle}>
           {t('studentDashboard.hello', { name: student.displayName.split(' ')[0] })}
         </h1>
-        <p>{t('studentDashboard.subtitle')}</p>
+        <span className={styles.greetingSubtitle}>{t('studentDashboard.subtitle')}</span>
       </section>
 
-      <EmptyState
-        title={t('studentDashboard.comingSoon')}
-        action={
-          <Link to="/" className="muted">
-            {t('studentDashboard.backHome')}
-          </Link>
-        }
-      >
-        {t('studentDashboard.comingSoonBody')}
-      </EmptyState>
-    </Stack>
+      <div className={styles.hint}>{t('studentDashboard.journey.startHint')}</div>
+
+      <JourneyTrack subjects={subjects} onIslandClick={onIslandClick} />
+    </div>
   )
 }

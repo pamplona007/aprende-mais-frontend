@@ -41,7 +41,6 @@ const ptBR = {
     demoHint: 'Credenciais de demonstração (clique para preencher):',
     teacher: 'Professor',
     student: 'Aluno',
-    typingHint: 'Digitando:',
     registerComingSoon: 'Cadastros em breve',
     registerComingSoonBody:
       'Para esta demonstração, use uma das contas de demonstração na página de login.',
@@ -108,6 +107,10 @@ const ptBR = {
     inviteMessage: 'Mensagem do convite:',
     backToDashboard: '← Voltar ao painel',
     studentNotFound: 'Aluno não encontrado',
+    historyTitle: 'Histórico do aluno',
+    historyEmpty: 'O aluno ainda não terminou nenhuma lição.',
+    historyCount: '{{count}} lição(ões) concluída(s)',
+    noHistory: 'Sem lições registradas ainda.',
   },
 
   inviteStudent: {
@@ -136,12 +139,49 @@ const ptBR = {
     crumbsHome: 'Início',
     crumbsArea: 'Área do aluno',
     hello: 'Olá, {{name}} 👋',
-    subtitle: 'Aqui ficarão suas aulas e convites dos professores.',
-    comingSoon: 'Painel do aluno em breve',
-    comingSoonBody:
-      'A área do professor está pronta; o lado do aluno (aceitar convites, fazer aulas, ver progresso) está a caminho.',
+    subtitle: 'Sua jornada de aprendizado.',
     backHome: '← Voltar ao início',
     notFound: 'Aluno não encontrado',
+    journey: {
+      startHint: 'Toque em uma ilha para começar',
+      lockedTooltip: 'Disponível em breve',
+      availableTooltip: 'Pronto para começar',
+      completedTooltip: 'Você completou! Toque para refazer',
+      starsLabel: 'estrelas',
+    },
+  },
+
+  lessonPlayer: {
+    progress: '{{current}} de {{total}}',
+    continue: 'Continuar',
+    tryAgain: 'Tentar de novo',
+    next: 'Próxima',
+    finish: 'Concluir',
+    correctTitle: 'Muito bem!',
+    wrongTitle: 'Quase!',
+    correctFeedback: 'Você acertou!',
+    wrongFeedback: 'Tente novamente com cuidado.',
+    theRightAnswer: 'A resposta certa era:',
+    completeTitle: 'Lição concluída!',
+    completeBody: 'Você terminou todas as atividades.',
+    scoreLabel: 'Pontuação',
+    starsEarned: 'Você ganhou {{count}} estrelas!',
+    backToJourney: 'Voltar para a jornada',
+    exitLesson: 'Sair',
+    confirmExit: 'Tem certeza que quer sair? Seu progresso será perdido.',
+  },
+
+  studentHistory: {
+    title: 'Histórico',
+    empty: 'Nenhuma lição concluída ainda.',
+    completedAt: 'Concluída em {{date}}',
+    exercises: '{{count}} exercícios',
+    score: '{{score}}%',
+    stars: {
+      one: '1 estrela',
+      other: '{{count}} estrelas',
+      zero: 'Nenhuma estrela',
+    },
   },
 
   register: {},

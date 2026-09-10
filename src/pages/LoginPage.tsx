@@ -33,14 +33,11 @@ export function LoginPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   })
-
-  const emailValue = watch('email')
 
   useEffect(() => {
     if (currentUser) navigate(postLoginPath(currentUser), { replace: true })
@@ -75,12 +72,10 @@ export function LoginPage() {
     <div className={styles.shell}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <h1 style={{ marginBottom: 4 }}>
+          <h1 className={styles.brand}>
             Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
           </h1>
-          <p className="muted" style={{ margin: 0 }}>
-            {t('auth.loginTitle')}
-          </p>
+          <p className={styles.subtitle}>{t('auth.loginTitle')}</p>
         </header>
 
         <form className={styles.form} onSubmit={onSubmit} noValidate>
@@ -115,15 +110,15 @@ export function LoginPage() {
             </Callout>
           )}
 
-          <Button type="submit" disabled={isSubmitting}>
-            {t('auth.submitLogin')}
-          </Button>
+          <div style={{ marginTop: 'var(--space-2)' }}>
+            <Button type="submit" disabled={isSubmitting}>
+              {t('auth.submitLogin')}
+            </Button>
+          </div>
         </form>
 
         <footer className={styles.footer}>
-          <p className="muted tiny" style={{ marginBottom: 'var(--space-2)' }}>
-            {t('auth.demoHint')}
-          </p>
+          <span className={styles.footerLabel}>{t('auth.demoHint')}</span>
           <Row gap="sm" className={styles.demoList} align="stretch">
             {demoHints.map((hint) => (
               <button
@@ -132,12 +127,12 @@ export function LoginPage() {
                 className={styles.demoChip}
                 onClick={() => fillDemoCredentials(hint.email, hint.password)}
               >
-                <strong>{hint.role}</strong>
-                <span className="muted tiny">{hint.email}</span>
+                <span className={styles.demoChipRole}>{hint.role}</span>
+                <span className={styles.demoChipEmail}>{hint.email}</span>
               </button>
             ))}
           </Row>
-          <p className="muted tiny" style={{ marginTop: 'var(--space-4)', marginBottom: 0 }}>
+          <p className={styles.footLink}>
             {t('auth.newHere')}{' '}
             <Link to="/register" style={{ color: 'var(--color-primary-strong)' }}>
               {t('auth.createAccount')}

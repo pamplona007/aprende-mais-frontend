@@ -1,0 +1,46 @@
+.track {
+  position: relative;
+  padding: var(--space-6) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  position: relative;
+  min-height: 160px;
+}
+
+.rowLeft {
+  justify-items: end;
+  padding-right: var(--space-6);
+}
+
+.rowRight {
+  justify-items: start;
+  padding-left: var(--space-6);
+}
+
+.rowCenter {
+  justify-items: center;
+  grid-template-columns: 1fr;
+}
+
+/* SVG curve connecting rows — overlays the whole track */
+.curves {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.curvePath {
+  fill: none;
+  stroke: var(--color-neutral-soft);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 4 12;
+}

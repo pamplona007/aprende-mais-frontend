@@ -1,0 +1,185 @@
+.tile {
+  position: relative;
+  width: 120px;
+  height: 140px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  display: block;
+  transform-origin: center bottom;
+  transition:
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+    filter 0.2s ease;
+}
+
+.tile:hover:not(.locked):not(.disabled) {
+  transform: translateY(-6px);
+}
+
+.tile:focus-visible {
+  outline: none;
+}
+
+.tile:focus-visible .card {
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 4px var(--color-primary-soft);
+}
+
+.locked {
+  cursor: not-allowed;
+}
+
+.disabled {
+  cursor: default;
+}
+
+/* ── Card body — tilted isometric ─────────────────────── */
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 18px;
+  background: var(--tile-color, var(--color-primary));
+  box-shadow:
+    0 6px 0 0 var(--tile-color-shadow, var(--color-primary-strong)),
+    0 8px 14px rgba(31, 45, 61, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-4deg);
+  transition: transform 0.2s ease;
+}
+
+.tile:hover:not(.locked) .card {
+  transform: rotate(-2deg) translateY(-2px);
+}
+
+/* Top "deck" — gives the isometric plate depth */
+.deck {
+  position: absolute;
+  inset: 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.iconBox {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-on-primary);
+  z-index: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
+/* ── States ──────────────────────────────────────────── */
+
+.locked .card {
+  background: var(--color-neutral-soft);
+  box-shadow:
+    0 6px 0 0 #c9d1de,
+    0 8px 14px rgba(31, 45, 61, 0.08);
+}
+
+.locked .iconBox {
+  color: var(--color-neutral);
+  opacity: 0.6;
+}
+
+.locked .deck {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.lockIcon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-neutral);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-black);
+  z-index: 2;
+}
+
+/* ── Stars ───────────────────────────────────────────── */
+
+.stars {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  padding: 4px 10px;
+  background: white;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 2px 6px rgba(31, 45, 61, 0.12);
+  z-index: 2;
+}
+
+.star {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.starOn {
+  color: #ffc800;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.1));
+}
+
+.starOff {
+  color: var(--color-neutral-soft);
+}
+
+.tile:not(.completed):not(.locked) .stars {
+  display: none;
+}
+
+/* ── Bounce entrance ────────────────────────────────── */
+
+.tile {
+  animation: bounce-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.8);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.tile:hover:not(.locked) .card {
+  animation: nudge 0.5s ease;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(-6deg) translateY(-3px);
+  }
+}
