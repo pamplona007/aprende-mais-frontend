@@ -1,5 +1,5 @@
-import type { Subject } from '../types'
 import { IslandTile } from './IslandTile'
+import type { Subject } from '../types'
 import styles from './JourneyTrack.module.css'
 
 interface JourneyTrackProps {
@@ -7,14 +7,59 @@ interface JourneyTrackProps {
   onIslandClick: (subject: Subject) => void
 }
 
-// Lays out subjects in alternating left/right zig-zag (Duolingo style).
-// First subject always goes left (or center if odd count), then alternates.
 export function JourneyTrack({ subjects, onIslandClick }: JourneyTrackProps) {
+  const trackHeight = Math.max(subjects.length, 1) * 184
+  const pathPoints = subjects.map((_, index) => ({
+    x: 50 + Math.sin(index * 1.35) * 15,
+    y: index * 184 + 92,
+  }))
+  const path = createPath(pathPoints)
+
   return (
-    <div className={styles.track}>
-      <Curves count={subjects.length} />
+    <div className={styles.track} style={{ height: `${trackHeight}px` }}>
+      <div className={styles.oceanBackdrop} aria-hidden="true">
+        <div className={styles.sunbeam} />
+        <div className={`${styles.wave} ${styles.waveBack}`} />
+        <div className={`${styles.wave} ${styles.waveFront}`} />
+        {Array.from({ length: 12 }, (_, index) => (
+          <span
+            key={index}
+            className={styles.bubble}
+            style={{
+              left: `${8 + ((index * 29) % 84)}%`,
+              top: `${4 + ((index * 37) % 91)}%`,
+              width: `${8 + (index % 4) * 4}px`,
+              height: `${8 + (index % 4) * 4}px`,
+              animationDelay: `${-(index * 1.7)}s`,
+              animationDuration: `${8 + (index % 3) * 2}s`,
+            }}
+          />
+        ))}
+      </div>
+      <svg
+        className={styles.terrain}
+        viewBox={`0 0 100 ${trackHeight}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <linearGradient id="journey-path-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1cb0f6" />
+            <stop offset="52%" stopColor="#58cc02" />
+            <stop offset="100%" stopColor="#ff9600" />
+          </linearGradient>
+        </defs>
+        <path className={styles.terrainPathShadow} d={path} />
+        <path className={styles.terrainPath} d={path} />
+      </svg>
       {subjects.map((subject, idx) => (
-        <IslandRow key={subject.id} subject={subject} index={idx} onClick={onIslandClick} />
+        <IslandRow
+          key={subject.id}
+          subject={subject}
+          index={idx}
+          pathPoint={pathPoints[idx]}
+          onClick={onIslandClick}
+        />
       ))}
     </div>
   )
@@ -23,31 +68,24 @@ export function JourneyTrack({ subjects, onIslandClick }: JourneyTrackProps) {
 function IslandRow({
   subject,
   index,
+  pathPoint,
   onClick,
 }: {
   subject: Subject
   index: number
+  pathPoint: { x: number; y: number } | undefined
   onClick: (s: Subject) => void
 }) {
-  // Pattern: left, right, left, right, ... center for the 1st if odd
-  const position =
-    index === 0
-      ? 'left'
-      : index === 1
-        ? 'right'
-        : index % 2 === 1
-          ? 'right'
-          : 'left'
-
-  const rowClass =
-    position === 'left'
-      ? `${styles.row} ${styles.rowLeft}`
-      : position === 'right'
-        ? `${styles.row} ${styles.rowRight}`
-        : styles.rowCenter
+  const x = pathPoint?.x ?? 50
+  const y = pathPoint?.y ?? index * 184 + 92
+  const rowStyle = {
+    left: `${x}%`,
+    top: `${y - 75}px`,
+    animationDelay: `${index * 80}ms`,
+  }
 
   return (
-    <div className={rowClass}>
+    <div className={styles.row} style={rowStyle}>
       <IslandTile
         subject={subject}
         onClick={subject.status === 'LOCKED' ? undefined : () => onClick(subject)}
@@ -57,32 +95,30 @@ function IslandRow({
   )
 }
 
-function Curves({ count }: { count: number }) {
-  // Each row is ~160px tall. Generate SVG that draws zig-zag curves
-  // connecting each island's approximate position. Coarse but readable.
-  const rowHeight = 160
-  const totalHeight = count * rowHeight
-  const svgWidth = 800
+function createPath(points: Array<{ x: number; y: number }>) {
+  const first = points[0]
+  if (!first) return ''
 
-  const paths: string[] = []
-  for (let i = 0; i < count - 1; i++) {
-    const y1 = i * rowHeight + 70
-    const y2 = (i + 1) * rowHeight + 70
-    // Alternate start/end side: left, right, left, right
-    const startLeft = i % 2 === 0
-    const endLeft = !startLeft
-    const x1 = startLeft ? 160 : svgWidth - 160
-    const x2 = endLeft ? 160 : svgWidth - 160
-    const midX = svgWidth / 2
-    const midY = (y1 + y2) / 2
-    paths.push(`M ${x1} ${y1} Q ${midX} ${midY} ${x2} ${y2}`)
+  let path = `M ${first.x} ${first.y}`
+
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const previous = points[index - 1] ?? points[index]
+    const start = points[index]
+    const end = points[index + 1]
+    const next = points[index + 2] ?? end
+    if (!previous || !start || !end || !next) continue
+
+    const controlStart = {
+      x: start.x + (end.x - previous.x) / 6,
+      y: start.y + (end.y - previous.y) / 6,
+    }
+    const controlEnd = {
+      x: end.x - (next.x - start.x) / 6,
+      y: end.y - (next.y - start.y) / 6,
+    }
+
+    path += ` C ${controlStart.x} ${controlStart.y} ${controlEnd.x} ${controlEnd.y} ${end.x} ${end.y}`
   }
 
-  return (
-    <svg className={styles.curves} viewBox={`0 0 ${svgWidth} ${totalHeight}`} preserveAspectRatio="none">
-      {paths.map((d, i) => (
-        <path key={i} d={d} className={styles.curvePath} />
-      ))}
-    </svg>
-  )
+  return path
 }

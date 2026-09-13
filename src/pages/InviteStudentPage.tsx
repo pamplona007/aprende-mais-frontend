@@ -6,6 +6,7 @@ import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
 import { Field } from '../components/Field'
+import { Icon } from '../components/Icon'
 import { Row } from '../components/Row'
 import { Stack } from '../components/Stack'
 import { StudentCard } from '../components/StudentCard'
@@ -41,8 +42,8 @@ export function InviteStudentPage() {
         <EmptyState
           title={t('inviteStudent.teacherNotFound')}
           action={
-            <Button to="/" variant="ghost">
-              {t('teacherDashboard.goHome')}
+            <Button to="/" variant="ghost" aria-label={t('teacherDashboard.goHome')}>
+              <Icon name="arrow-left" size={18} />
             </Button>
           }
         />
@@ -118,8 +119,9 @@ export function InviteStudentPage() {
                 )
                 navigate(`/teacher/${teacher.id}`)
               }}
+              aria-label={t('inviteStudent.send')}
             >
-              {t('inviteStudent.send')}
+              <Icon name="send" size={18} />
             </Button>
             <Button
               variant="ghost"
@@ -127,8 +129,9 @@ export function InviteStudentPage() {
                 setSelectedId(null)
                 setMessage('')
               }}
+              aria-label={t('inviteStudent.cancel')}
             >
-              {t('inviteStudent.cancel')}
+              <Icon name="close" size={18} />
             </Button>
           </Row>
         </Card>

@@ -10,6 +10,7 @@ import { CREDENTIALS } from '../auth/credentials'
 import { Button } from '../components/Button'
 import { Field } from '../components/Field'
 import { Callout } from '../components/Callout'
+import { Icon } from '../components/Icon'
 import { Row } from '../components/Row'
 import styles from './auth.module.css'
 
@@ -72,9 +73,7 @@ export function LoginPage() {
     <div className={styles.shell}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <h1 className={styles.brand}>
-            Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
-          </h1>
+          <img src="/logo.svg" alt="AVIBI" className={styles.brandLogo} />
           <p className={styles.subtitle}>{t('auth.loginTitle')}</p>
         </header>
 
@@ -110,9 +109,9 @@ export function LoginPage() {
             </Callout>
           )}
 
-          <div style={{ marginTop: 'var(--space-2)' }}>
-            <Button type="submit" disabled={isSubmitting}>
-              {t('auth.submitLogin')}
+          <div className={styles.submitRow}>
+            <Button type="submit" disabled={isSubmitting} aria-label={t('auth.submitLogin')}>
+              <Icon name="arrow-right" size={20} />
             </Button>
           </div>
         </form>

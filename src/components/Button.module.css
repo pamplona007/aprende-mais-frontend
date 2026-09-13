@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 10px 18px;
+  padding: 10px 14px;
   border-radius: var(--radius-md);
   font-family: inherit;
   font-weight: var(--font-weight-medium);
@@ -63,6 +63,6 @@
 }
 
 .small {
-  padding: 6px 12px;
+  padding: 6px 10px;
   font-size: 0.82rem;
 }

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/AuthProvider'
 import { Avatar } from './Avatar'
 import { Button } from './Button'
+import { Icon } from './Icon'
 import styles from './Layout.module.css'
 
 export function Layout() {
@@ -18,34 +19,62 @@ export function Layout() {
   return (
     <div className={styles.shell}>
       <header className={styles.header}>
-        <Link to="/" className={styles.brand}>
-          <span className={styles.brandMark}>A+</span>
-          Aprende+
+        <Link to="/" className={styles.brand} aria-label="AVIBI">
+          <img src="/logo.svg" alt="AVIBI" className={styles.logo} />
         </Link>
 
         <nav className={styles.nav}>
           {currentUser ? (
             <>
+              {currentUser.role === 'TEACHER' && (
+                <NavLink
+                  to={`/teacher/${currentUser.id}`}
+                  className={({ isActive }) =>
+                    `${styles.navIconLink} ${isActive ? styles.navIconLinkActive : ''}`
+                  }
+                  aria-label={t('nav.teacherArea')}
+                >
+                  <Icon name="sparkles" size={20} />
+                </NavLink>
+              )}
+              {currentUser.role === 'STUDENT' && (
+                <NavLink
+                  to={`/student/${currentUser.id}`}
+                  className={({ isActive }) =>
+                    `${styles.navIconLink} ${isActive ? styles.navIconLinkActive : ''}`
+                  }
+                  aria-label={t('nav.studentArea')}
+                >
+                  <Icon name="sparkles" size={20} />
+                </NavLink>
+              )}
               <div className={styles.userBlock}>
                 <Avatar user={currentUser} size="sm" />
-                <div className={styles.userMeta}>
-                  <span className={styles.userName}>{currentUser.displayName}</span>
-                  <span className={styles.userRole}>
-                    {t(`user.roleLabels.${currentUser.role}`)}
-                  </span>
-                </div>
               </div>
-              <Button variant="ghost" size="sm" onClick={onLogout}>
-                {t('nav.logout')}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onLogout}
+                aria-label={t('nav.logout')}
+              >
+                <Icon name="logout" size={18} />
               </Button>
             </>
           ) : (
             <>
-              <NavLink to="/login" className={styles.navLink}>
-                {t('nav.login')}
+              <NavLink
+                to="/login"
+                className={styles.navIconLink}
+                aria-label={t('nav.login')}
+              >
+                <Icon name="arrow-right" size={20} />
               </NavLink>
-              <NavLink to="/register" className={styles.navLink}>
-                {t('nav.register')}
+              <NavLink
+                to="/register"
+                className={styles.navIconLink}
+                aria-label={t('nav.register')}
+              >
+                <Icon name="plus" size={20} />
               </NavLink>
             </>
           )}

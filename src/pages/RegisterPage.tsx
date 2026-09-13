@@ -9,9 +9,7 @@ export function RegisterPage() {
     <div className={styles.shell}>
       <div className={styles.card}>
         <header className={styles.header}>
-          <h1 style={{ marginBottom: 4 }}>
-            Aprende<span style={{ color: 'var(--color-primary)' }}>+</span>
-          </h1>
+          <img src="/logo.svg" alt="AVIBI" className={styles.brandLogo} />
           <p className="muted" style={{ margin: 0 }}>
             {t('auth.registerTitle')}
           </p>

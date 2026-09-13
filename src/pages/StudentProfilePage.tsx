@@ -10,6 +10,7 @@ import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
+import { Icon } from '../components/Icon'
 import { Row } from '../components/Row'
 import { Stack } from '../components/Stack'
 import { StatusPill } from '../components/StatusPill'
@@ -36,8 +37,8 @@ export function StudentProfilePage() {
         <EmptyState
           title={t('studentProfile.studentNotFound')}
           action={
-            <Button to="/" variant="ghost">
-              {t('teacherDashboard.goHome')}
+            <Button to="/" variant="ghost" aria-label={t('teacherDashboard.goHome')}>
+              <Icon name="arrow-left" size={18} />
             </Button>
           }
         />
@@ -145,8 +146,13 @@ export function StudentProfilePage() {
               <div className={styles.relMessage}>{relationship.message}</div>
             )}
             <Row>
-              <Button variant="ghost" size="sm" onClick={() => navigate(`/teacher/${teacher.id}`)}>
-                {t('studentProfile.backToDashboard')}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/teacher/${teacher.id}`)}
+                aria-label={t('studentProfile.backToDashboard')}
+              >
+                <Icon name="arrow-left" size={16} />
               </Button>
             </Row>
           </Stack>

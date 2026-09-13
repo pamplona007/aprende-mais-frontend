@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { getRelationshipsForTeacher, getUserById } from '../mocks'
 import type { TeachingRelationship } from '../types'
 import { Avatar } from '../components/Avatar'
-import { StudentCard } from '../components/StudentCard'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { EmptyState } from '../components/EmptyState'
+import { Icon } from '../components/Icon'
+import { StudentCard } from '../components/StudentCard'
 import { GridCards } from '../components/GridCards'
 import { Stack } from '../components/Stack'
 import styles from './TeacherDashboard.module.css'
@@ -52,8 +53,8 @@ export function TeacherDashboard() {
         <EmptyState
           title={t('teacherDashboard.teacherNotFound')}
           action={
-            <Button to="/" variant="ghost">
-              {t('teacherDashboard.goHome')}
+            <Button to="/" variant="ghost" aria-label={t('teacherDashboard.goHome')}>
+              <Icon name="arrow-left" size={18} />
             </Button>
           }
         >
@@ -73,8 +74,11 @@ export function TeacherDashboard() {
             <div className={styles.headerEmail}>{teacher.email}</div>
           </div>
         </div>
-        <Button onClick={() => navigate(`/teacher/${teacher.id}/invite`)}>
-          {t('teacherDashboard.inviteStudent')}
+        <Button
+          onClick={() => navigate(`/teacher/${teacher.id}/invite`)}
+          aria-label={t('teacherDashboard.inviteStudent')}
+        >
+          <Icon name="plus" size={18} />
         </Button>
       </header>
 

@@ -1,10 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { getSubjectsForStudent, getUserById, mockStartLesson } from '../mocks'
 import type { Lesson, Subject } from '../types'
 import { Button } from '../components/Button'
 import { EmptyState } from '../components/EmptyState'
+import { Icon } from '../components/Icon'
 import { JourneyTrack } from '../components/JourneyTrack'
 import { LessonPlayer } from '../components/LessonPlayer'
 import { Stack } from '../components/Stack'
@@ -21,6 +22,17 @@ export function StudentDashboard() {
 
   // Active lesson session (the one the student is currently working on).
   const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
+  const [lessonExiting, setLessonExiting] = useState(false)
+  const [journeyLeaving, setJourneyLeaving] = useState(false)
+  const exitTimeoutRef = useRef<number | null>(null)
+  const enterTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (exitTimeoutRef.current !== null) window.clearTimeout(exitTimeoutRef.current)
+      if (enterTimeoutRef.current !== null) window.clearTimeout(enterTimeoutRef.current)
+    }
+  }, [])
 
   if (!student) {
     return (
@@ -28,8 +40,8 @@ export function StudentDashboard() {
         <EmptyState
           title={t('studentDashboard.notFound')}
           action={
-            <Button to="/" variant="ghost">
-              {t('teacherDashboard.goHome')}
+            <Button to="/" variant="ghost" aria-label={t('teacherDashboard.goHome')}>
+              <Icon name="arrow-left" size={18} />
             </Button>
           }
         />
@@ -38,19 +50,34 @@ export function StudentDashboard() {
   }
 
   const onIslandClick = (subject: Subject) => {
-    if (subject.status === 'LOCKED') return
+    if (subject.status === 'LOCKED' || journeyLeaving) return
     const result = mockStartLesson(student.id, subject.id)
     if (!result) return
-    setActiveLesson(result.lesson)
+    setJourneyLeaving(true)
+    enterTimeoutRef.current = window.setTimeout(() => {
+      setActiveLesson(result.lesson)
+      setJourneyLeaving(false)
+      enterTimeoutRef.current = null
+    }, 360)
   }
 
-  const exitLesson = () => setActiveLesson(null)
-  const completeLesson = () => setActiveLesson(null)
+  const closeLesson = () => {
+    if (lessonExiting) return
+    setLessonExiting(true)
+    exitTimeoutRef.current = window.setTimeout(() => {
+      setActiveLesson(null)
+      setLessonExiting(false)
+      exitTimeoutRef.current = null
+    }, 280)
+  }
+
+  const exitLesson = closeLesson
+  const completeLesson = closeLesson
 
   if (activeLesson) {
     return (
       <div className={styles.page}>
-        <div className={styles.lesson}>
+        <div className={`${styles.lesson} ${lessonExiting ? styles.lessonLeaving : ''}`}>
           <LessonPlayer
             lesson={activeLesson}
             onComplete={completeLesson}
@@ -63,16 +90,16 @@ export function StudentDashboard() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.greeting}>
-        <h1 className={styles.greetingTitle}>
-          {t('studentDashboard.hello', { name: student.displayName.split(' ')[0] })}
-        </h1>
-        <span className={styles.greetingSubtitle}>{t('studentDashboard.subtitle')}</span>
-      </section>
+      <div className={styles.bg} />
 
-      <div className={styles.hint}>{t('studentDashboard.journey.startHint')}</div>
+      <div className={`${styles.journeyView} ${journeyLeaving ? styles.journeyLeaving : ''}`}>
+        <div className={styles.hint}>
+          <span className={styles.hintIcon}>👆</span>
+          {t('studentDashboard.journey.startHint')}
+        </div>
 
-      <JourneyTrack subjects={subjects} onIslandClick={onIslandClick} />
+        <JourneyTrack subjects={subjects} onIslandClick={onIslandClick} />
+      </div>
     </div>
   )
 }

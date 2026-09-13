@@ -1,46 +1,184 @@
 .track {
   position: relative;
-  padding: var(--space-6) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-7);
+  min-height: 184px;
+  padding: 0 0 24px;
+  overflow: visible;
+}
+
+.oceanBackdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(255, 255, 255, 0.72), transparent 22%),
+    radial-gradient(circle at 86% 46%, rgba(92, 204, 232, 0.2), transparent 30%),
+    linear-gradient(180deg, rgba(228, 249, 255, 0.58), rgba(135, 211, 235, 0.22));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sunbeam {
+  position: absolute;
+  top: -8%;
+  left: 32%;
+  width: 36%;
+  height: 116%;
+  background: linear-gradient(105deg, transparent 0%, rgba(255, 255, 255, 0.34) 48%, transparent 100%);
+  filter: blur(12px);
+  opacity: 0.8;
+  transform: rotate(8deg);
+  animation: sunbeam-drift 11s ease-in-out infinite;
+}
+
+.wave {
+  position: absolute;
+  left: -12%;
+  width: 124%;
+  height: 190px;
+  border-top: 2px solid rgba(255, 255, 255, 0.26);
+  border-radius: 50%;
+  transform-origin: center;
+  animation: wave-sway 9s ease-in-out infinite;
+}
+
+.waveBack {
+  top: 16%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.16), transparent 68%);
+  opacity: 0.65;
+}
+
+.waveFront {
+  bottom: 3%;
+  height: 240px;
+  animation-delay: -4s;
+  background: radial-gradient(ellipse at 50% 0%, rgba(28, 176, 246, 0.1), transparent 70%);
+  opacity: 0.8;
 }
 
 .row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  position: relative;
-  min-height: 160px;
+  position: absolute;
+  width: 132px;
+  height: 150px;
+  transform: translateX(-50%);
+  z-index: 1;
+  animation: row-arrive 0.7s ease-out backwards;
 }
 
-.rowLeft {
-  justify-items: end;
-  padding-right: var(--space-6);
+@keyframes row-arrive {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.rowRight {
-  justify-items: start;
-  padding-left: var(--space-6);
-}
-
-.rowCenter {
-  justify-items: center;
-  grid-template-columns: 1fr;
-}
-
-/* SVG curve connecting rows — overlays the whole track */
-.curves {
+/* The guide shares the same vertical rhythm as each row. */
+.terrain {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: -1;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.curvePath {
+.terrainPath {
   fill: none;
-  stroke: var(--color-neutral-soft);
-  stroke-width: 6;
+  stroke: url('#journey-path-gradient');
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: 4 12;
+  vector-effect: non-scaling-stroke;
+}
+
+.terrainPathShadow {
+  stroke: rgba(31, 45, 61, 0.06);
+  stroke-width: 10;
+  fill: none;
+  stroke-linecap: round;
+  filter: blur(2px);
+  vector-effect: non-scaling-stroke;
+}
+
+/* Floating bubbles — gentle vertical drift with a glassy highlight. */
+.bubble {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.92) 0 12%, rgba(255, 255, 255, 0.24) 34%, rgba(91, 194, 224, 0.12) 72%);
+  box-shadow: 0 2px 8px rgba(49, 168, 204, 0.12), inset -2px -2px 4px rgba(67, 165, 194, 0.1);
+  animation: bubble-drift 9s ease-in-out infinite;
+}
+
+@keyframes bubble-drift {
+  0% {
+    transform: translate3d(0, 16px, 0) scale(0.72);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  52% {
+    transform: translate3d(10px, -18px, 0) scale(1);
+  }
+  80% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate3d(-7px, -48px, 0) scale(0.84);
+    opacity: 0;
+  }
+}
+
+@keyframes sunbeam-drift {
+  0%,
+  100% {
+    transform: translateX(-18%) rotate(8deg);
+    opacity: 0.42;
+  }
+  50% {
+    transform: translateX(18%) rotate(8deg);
+    opacity: 0.82;
+  }
+}
+
+@keyframes wave-sway {
+  0%,
+  100% {
+    transform: translateX(-2%) rotate(-1deg) scaleY(0.96);
+  }
+  50% {
+    transform: translateX(2%) rotate(1deg) scaleY(1.04);
+  }
+}
+
+/* Floating cloud decorations */
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 100px;
+  filter: drop-shadow(0 4px 12px rgba(31, 45, 61, 0.06));
+  opacity: 0.7;
+  animation: cloud-drift 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .sunbeam,
+  .wave,
+  .bubble,
+  .cloud {
+    animation: none;
+  }
+}
+
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-100px);
+  }
+  to {
+    transform: translateX(calc(100vw + 100px));
+  }
 }

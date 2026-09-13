@@ -1,6 +1,6 @@
 const ptBR = {
   common: {
-    appName: 'Aprende+',
+    appName: 'AVIBI',
     loading: 'Carregando...',
   },
 

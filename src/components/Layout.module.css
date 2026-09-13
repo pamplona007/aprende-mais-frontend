@@ -24,17 +24,11 @@
   text-decoration: none;
 }
 
-.brandMark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: var(--color-primary);
-  color: var(--color-text-on-primary);
-  font-weight: var(--font-weight-bold);
-  font-size: 0.85rem;
+.logo {
+  display: block;
+  width: 42px;
+  height: 36px;
+  object-fit: contain;
 }
 
 .nav {
@@ -63,36 +57,44 @@
   background: var(--color-surface-muted);
 }
 
+.navIconLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  background: transparent;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+.navIconLink:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+.navIconLinkActive {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-strong);
+}
+
 .userBlock {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 4px 12px 4px 4px;
+  padding: 2px;
   border-radius: var(--radius-pill);
-  background: var(--color-surface-muted);
-}
-
-.userMeta {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-}
-
-.userName {
-  font-weight: var(--font-weight-medium);
-  font-size: 0.85rem;
-  color: var(--color-text);
-}
-
-.userRole {
-  font-size: 0.7rem;
-  color: var(--color-text-muted);
 }
 
 .main {
   flex: 1;
-  padding: var(--space-7) var(--space-6) var(--space-8);
-  max-width: 1100px;
+  padding: 0 var(--space-4) var(--space-7);
+  max-width: none;
   width: 100%;
-  margin: 0 auto;
+  margin: 0;
 }

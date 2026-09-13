@@ -1,63 +1,205 @@
 .page {
-  min-height: 60vh;
+  min-height: calc(100vh - 70px);
+  position: relative;
+  padding-top: var(--space-4);
+  margin-left: calc(-1 * var(--space-4));
+  margin-right: calc(-1 * var(--space-4));
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+  padding-bottom: var(--space-8);
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(
+      circle at 20% 10%,
+      rgba(146, 220, 240, 0.55) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 60%,
+      rgba(115, 195, 240, 0.4) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(195, 230, 250, 0.35) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #eaf6ff 0%, #f4fbff 100%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .greeting {
   display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  position: relative;
+  z-index: 1;
 }
 
 .greetingTitle {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: var(--font-weight-black);
   letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--color-text), color-mix(in srgb, var(--color-text) 50%, var(--color-primary)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .greetingSubtitle {
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
 }
 
 .hint {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: var(--space-2);
-  margin: 0 auto var(--space-4);
+  margin: 0 auto var(--space-5);
   padding: var(--space-2) var(--space-4);
-  background: var(--color-primary-soft);
-  color: var(--color-primary-strong);
+  background: white;
+  color: var(--color-text-muted);
   border-radius: var(--radius-pill);
   font-size: 0.85rem;
   font-weight: var(--font-weight-medium);
-  width: max-content;
-  animation: float 2.5s ease-in-out infinite;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes float {
+.hintIcon {
+  font-size: 1rem;
+  animation: hint-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes hint-bounce {
   0%,
   100% {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
   }
 }
 
 .lesson {
-  margin-top: var(--space-5);
+  position: relative;
+  z-index: 1;
+  transform-origin: center top;
+  animation: lesson-enter 0.95s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.backBtn {
-  margin-bottom: var(--space-4);
+.lesson::before {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 18%;
+  right: 18%;
+  height: 45%;
+  border-radius: 50%;
+  background: rgba(28, 176, 246, 0.18);
+  filter: blur(32px);
+  opacity: 0;
+  pointer-events: none;
+  animation: lesson-glow 0.95s ease-out both;
 }
 
-.empty {
-  padding: var(--space-7) var(--space-5);
-  text-align: center;
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  border: 1px dashed var(--color-border);
+.lessonLeaving {
+  animation: lesson-leave 0.28s ease-in both;
+  pointer-events: none;
+}
+
+.journeyView {
+  position: relative;
+  z-index: 1;
+  animation: journey-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.journeyLeaving {
+  pointer-events: none;
+  animation: journey-leave 0.36s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes lesson-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985) perspective(900px) rotateX(1deg);
+    filter: blur(1px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) perspective(900px) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes lesson-glow {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(18px);
+  }
+  45% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1) translateY(-4px);
+  }
+}
+
+@keyframes lesson-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.98);
+    filter: blur(4px);
+  }
+}
+
+@keyframes journey-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes journey-leave {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.985);
+    filter: blur(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson,
+  .journeyView {
+    animation: none;
+  }
+
+  .lesson::before {
+    animation: none;
+  }
 }
