@@ -165,10 +165,18 @@ const ptBR = {
     completeTitle: 'Lição concluída!',
     completeBody: 'Você terminou todas as atividades.',
     scoreLabel: 'Pontuação',
+    scoreOf: '{{correct}} de {{total}}',
+    correctCount: 'Você acertou {{correct}} de {{total}}',
+    timeSpent: 'Tempo gasto',
     starsEarned: 'Você ganhou {{count}} estrelas!',
+    starsEarnedOne: 'Você ganhou 1 estrela!',
     backToJourney: 'Voltar para a jornada',
     exitLesson: 'Sair',
     confirmExit: 'Tem certeza que quer sair? Seu progresso será perdido.',
+    perfect: 'Perfeito!',
+    great: 'Mandou bem!',
+    good: 'Bom trabalho!',
+    keepGoing: 'Continue tentando!',
   },
 
   studentHistory: {

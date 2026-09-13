@@ -37,46 +37,52 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
     return map
   }, [lesson.subjectId])
 
-  // The "tour" is the sequence of exercise IDs the player is currently
-  // walking through. We start with all exercises in their initial order.
-  // When a question is answered wrong, we mark it needsRetry (visual only)
-  // and continue with the rest. After the first pass, if anything still
-  // needs retry, we replay those. We loop until everything is resolved.
-  const [tour, setTour] = useState<string[]>(() => lesson.exercises.map((e) => e.id))
+  // IDs of exercise entries that the student has answered correctly (at least
+  // once). Once every entry is in here, the lesson is complete.
+  const [resolved, setResolved] = useState<Set<string>>(new Set())
+  // IDs of entries the student got wrong on their FIRST attempt — used to
+  // compute the score. Unlike `retries`, this set only grows.
+  const [firstAttemptWrong, setFirstAttemptWrong] = useState<Set<string>>(new Set())
+  // IDs of entries the student got wrong at least once; they get re-asked
+  // after the first pass over the lesson.
+  const [retries, setRetries] = useState<Set<string>>(new Set())
   const [currentIdx, setCurrentIdx] = useState(0)
   const [feedback, setFeedback] = useState<Feedback>(null)
-  const [needsRetry, setNeedsRetry] = useState<Set<string>>(new Set())
   const [confettiKey, setConfettiKey] = useState(0)
+  const [completionStart, setCompletionStart] = useState<number | null>(null)
   const exitClickedRef = useRef(false)
+  // Refs mirror the state so timeouts can read the latest values without
+  // stale closure issues.
+  const resolvedRef = useRef(resolved)
+  const retriesRef = useRef(retries)
+  resolvedRef.current = resolved
+  retriesRef.current = retries
 
-  const currentEntryId = tour[currentIdx]
-  const currentEntry = lesson.exercises.find((e) => e.id === currentEntryId)
+  const currentEntry = lesson.exercises[currentIdx]
   const currentExercise = currentEntry ? exercisePool.get(currentEntry.exerciseId) : undefined
   const parsed = currentExercise
     ? multipleChoicePayloadSchema.safeParse(currentExercise.payload)
     : undefined
   const mcp = parsed?.success ? parsed.data : undefined
 
-  // Resolve status: a question is "done" if it's not in needsRetry set.
-  // When all are done, mark the lesson complete in the mock.
+  // If everything's resolved, complete the lesson and show CompleteScreen.
   useEffect(() => {
-    if (tour.length === 0) return
-    if (needsRetry.size === 0) {
-      // All clear — complete the lesson.
-      markAllCorrect()
+    if (lesson.exercises.length > 0 && resolved.size === lesson.exercises.length) {
+      markLessonComplete()
+      setCompletionStart((s) => s ?? Date.now())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [needsRetry.size, tour.length])
+  }, [resolved.size])
 
-  const markAllCorrect = () => {
-    // Walk the lesson and mark every entry as either CORRECT or FAILED_THEN_CORRECT.
-    // We do this by submitting a "correct" answer (first correct choice) for each.
-    // The mock already marks them correct if the entry was PENDING; if it was
-    // already CORRECT or FAILED_THEN_CORRECT, the call is a no-op.
+  const markLessonComplete = () => {
+    // Submit a correct answer for any entry that's still PENDING in the mock
+    // (this can happen if the student got them all right without retries).
     for (const ex of lesson.exercises) {
-      const firstCorrect = exercisePool.get(ex.exerciseId)?.payload.choices.find((c) => c.correct)
-      if (firstCorrect) {
-        mockSubmitAnswer(lesson.id, ex.id, firstCorrect.id)
+      if (ex.status === 'PENDING') {
+        const firstCorrect = exercisePool.get(ex.exerciseId)?.payload.choices.find((c) => c.correct)
+        if (firstCorrect) {
+          mockSubmitAnswer(lesson.id, ex.id, firstCorrect.id)
+        }
       }
     }
   }
@@ -88,55 +94,56 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
     if (!result) return
 
     if (result.correct) {
+      setResolved((prev) => {
+        const next = new Set(prev)
+        next.add(currentEntry.id)
+        return next
+      })
       setFeedback({
         kind: 'correct',
         consequence: result.consequence,
         status: result.status === 'PENDING' ? 'CORRECT' : result.status,
       })
       setConfettiKey((k) => k + 1)
-      // No auto-advance — user clicks "Continuar"
     } else {
       setFeedback({
         kind: 'wrong',
         consequence: result.consequence,
         correctChoiceText: result.correctChoiceText,
       })
-      // Mark this question for retry; advance to next question.
-      setNeedsRetry((prev) => new Set(prev).add(currentEntry.id))
-      // Short delay so user can see the shake animation before we move on.
-      window.setTimeout(() => {
-        advance(false)
-      }, 1400)
+      // Mark this entry for replay after the first pass, and remember
+      // it was wrong on first attempt so the score reflects it.
+      setRetries((prev) => new Set(prev).add(currentEntry.id))
+      setFirstAttemptWrong((prev) => new Set(prev).add(currentEntry.id))
+      // No auto-advance — user clicks "Continuar" when ready.
     }
   }
 
-  const advance = (_wasCorrect: boolean) => {
+  const advance = () => {
     setFeedback(null)
-    const isLastInTour = currentIdx >= tour.length - 1
-
-    if (!isLastInTour) {
-      setCurrentIdx(currentIdx + 1)
-      return
-    }
-
-    // End of tour — if anything still needs retry, replay those entries.
-    if (needsRetry.size > 0) {
-      const retryEntries = lesson.exercises
-        .filter((e) => needsRetry.has(e.id))
-        .map((e) => e.id)
-      if (retryEntries.length > 0) {
-        setTour(retryEntries)
-        setCurrentIdx(0)
-        setNeedsRetry(new Set())
+    // Move to next unresolved entry beyond current.
+    for (let i = currentIdx + 1; i < lesson.exercises.length; i += 1) {
+      const entry = lesson.exercises[i]
+      if (entry && !resolvedRef.current.has(entry.id)) {
+        setCurrentIdx(i)
         return
       }
     }
-
-    // All done — CompleteScreen will render on next render.
+    // End of first pass. If there are retries, replay them in order.
+    const pendingRetries = retriesRef.current
+    if (pendingRetries.size > 0) {
+      const firstRetryIdx = lesson.exercises.findIndex((e) => pendingRetries.has(e.id))
+      if (firstRetryIdx >= 0) {
+        setRetries(new Set())
+        setCurrentIdx(firstRetryIdx)
+        return
+      }
+    }
+    // Otherwise everything is resolved — CompleteScreen renders next tick.
   }
 
   const onContinue = () => {
-    advance(true)
+    advance()
   }
 
   // Confetti pieces for the correct-answer burst.
@@ -201,16 +208,15 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
 
       <Row gap="md" align="center">
         <div className={styles.dots}>
-          {lesson.exercises.map((ex) => {
-            const visited = tour.includes(ex.id) || ex.id === currentEntryId
-            const isCurrent = ex.id === currentEntryId
-            const isDone = ex.status === 'CORRECT' || ex.status === 'FAILED_THEN_CORRECT'
-            const isRetry = needsRetry.has(ex.id)
+          {lesson.exercises.map((ex, idx) => {
+            const isCurrent = idx === currentIdx
+            const isDone = resolved.has(ex.id)
+            const isRetry = retries.has(ex.id) && !isDone
             const className = [
               styles.dot,
               isCurrent ? styles.dotActive : null,
               !isCurrent && isDone ? styles.dotCorrect : null,
-              !isCurrent && !isDone && visited && isRetry ? styles.dotNeedsRetry : null,
+              !isCurrent && !isDone && isRetry ? styles.dotNeedsRetry : null,
             ]
               .filter(Boolean)
               .join(' ')
