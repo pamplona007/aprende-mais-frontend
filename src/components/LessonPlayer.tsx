@@ -6,7 +6,6 @@ import { multipleChoicePayloadSchema } from '../schemas/exercise'
 import { Button } from './Button'
 import { Icon } from './Icon'
 import { LessonImage } from './LessonImage'
-import { Row } from './Row'
 import styles from './LessonPlayer.module.css'
 
 function jitter(max: number): number {
