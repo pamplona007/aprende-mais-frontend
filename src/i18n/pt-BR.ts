@@ -21,9 +21,49 @@ const ptBR = {
   },
 
   home: {
-    hero: 'Uma plataforma de aprendizagem para crianças com dificuldades de aprendizado.',
+    brandAlt: 'Logo AVIBI',
+    eyebrow: 'Um oceano de descobertas',
+    title: 'Mergulhe em novas descobertas.',
+    hero:
+      'Uma experiência de aprendizagem acolhedora, feita para transformar cada conquista em vontade de continuar.',
+    ctaPrimary: 'Começar agora',
+    ctaSecondary: 'Conhecer a plataforma',
     ctaLogin: 'Entrar',
     ctaRegister: 'Cadastrar',
+    trustedBy: 'Um espaço para cada ritmo de aprendizagem',
+    preview: {
+      label: 'Jornada de hoje',
+      student: 'Oi, Sofia!',
+      progress: '3 de 5 etapas concluídas',
+      lesson: 'Palavras e sons',
+      lessonMeta: 'Próxima atividade',
+      continue: 'Continuar',
+      stars: '12 estrelas',
+      seaLabel: 'Explorando o oceano do saber',
+    },
+    capabilities: {
+      title: 'Tudo o que torna aprender mais possível',
+      subtitle: 'Uma base tranquila para alunos, famílias e educadores acompanharem cada avanço.',
+      items: [
+        {
+          title: 'Jornadas personalizadas',
+          body: 'Atividades organizadas em uma sequência clara, com desafios que respeitam o tempo de cada aluno.',
+        },
+        {
+          title: 'Progresso que aproxima',
+          body: 'Professores acompanham conquistas e encontram o melhor próximo passo para apoiar cada criança.',
+        },
+        {
+          title: 'Conquistas que motivam',
+          body: 'Feedback positivo e pequenas recompensas tornam o esforço visível e ajudam a criar confiança.',
+        },
+      ],
+    },
+    closing: {
+      title: 'O próximo passo começa aqui.',
+      body: 'Crie um espaço de aprendizagem que celebre o processo inteiro, não apenas a resposta certa.',
+      cta: 'Criar minha conta',
+    },
   },
 
   auth: {
