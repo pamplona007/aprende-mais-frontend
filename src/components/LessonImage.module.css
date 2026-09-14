@@ -1,0 +1,30 @@
+.img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 40vh;
+  border-radius: 14px;
+  object-fit: contain;
+  background: var(--color-surface-muted);
+}
+
+.scenarioImg {
+  border-radius: 18px;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 6px 16px rgba(31, 45, 61, 0.08);
+}
+
+.choiceImg {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 12px;
+}
+
+.consequenceImg {
+  margin-top: var(--space-3);
+  border-radius: 16px;
+  aspect-ratio: 1 / 1;
+  max-width: 180px;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--subject-color, var(--color-primary)) 18%, transparent);
+}

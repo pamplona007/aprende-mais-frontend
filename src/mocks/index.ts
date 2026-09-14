@@ -782,6 +782,26 @@ export const mockExercises: Exercise[] = [
   },
 ]
 
+// ─── Illustration assets ──────────────────────────────────────────────────
+// Attach `imageUrl` / `scenarioImageUrl` / `consequenceImageUrl` to every
+// exercise by mapping the IDs the image-prompts.json file uses. URLs point to
+// /images/exercises/<id>.png (Vite serves /public at the root).
+//
+// If you ran scripts/generate-images.mjs with --only ex-coz-1, every other
+// exercise's imageUrl will simply 404 at runtime — the UI is built to
+// gracefully fall back to text-only rendering when the image is missing.
+const img = (id: string) => `/images/exercises/${id}.png`
+for (const exercise of mockExercises) {
+  const exId = exercise.id
+  if (exercise.payload.scenario !== undefined) {
+    exercise.payload.scenarioImageUrl = img(`${exId}-scenario`)
+  }
+  for (const choice of exercise.payload.choices) {
+    choice.imageUrl = img(`${exId}-choice-${choice.id}`)
+    choice.consequenceImageUrl = img(`${exId}-consequence-${choice.id}`)
+  }
+}
+
 // ─── Lesson history for Ana (some completed, one in progress) ────────
 export const mockLessons: Lesson[] = [
   {

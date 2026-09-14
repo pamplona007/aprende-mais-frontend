@@ -5,6 +5,7 @@ import { mockSubmitAnswer, getExercisesForSubject } from '../mocks'
 import { multipleChoicePayloadSchema } from '../schemas/exercise'
 import { Button } from './Button'
 import { Icon } from './Icon'
+import { LessonImage } from './LessonImage'
 import { Row } from './Row'
 import styles from './LessonPlayer.module.css'
 
@@ -25,8 +26,13 @@ interface LessonPlayerProps {
 }
 
 type Feedback =
-  | { kind: 'correct'; consequence: string; status: 'CORRECT' | 'FAILED_THEN_CORRECT' }
-  | { kind: 'wrong'; consequence: string; correctChoiceText: string }
+  | {
+      kind: 'correct'
+      consequence: string
+      status: 'CORRECT' | 'FAILED_THEN_CORRECT'
+      chosenChoiceId: string
+    }
+  | { kind: 'wrong'; consequence: string; correctChoiceText: string; chosenChoiceId: string }
   | null
 
 export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) {
@@ -101,6 +107,7 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
         kind: 'correct',
         consequence: result.consequence,
         status: result.status === 'PENDING' ? 'CORRECT' : result.status,
+        chosenChoiceId: choiceId,
       })
       setConfettiKey((k) => k + 1)
     } else {
@@ -108,6 +115,7 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
         kind: 'wrong',
         consequence: result.consequence,
         correctChoiceText: result.correctChoiceText,
+        chosenChoiceId: choiceId,
       })
       // Mark this entry for replay after the first pass, and remember
       // it was wrong on first attempt so the score reflects it.
@@ -228,26 +236,12 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
         </div>
       </div>
 
-      <Row gap="md" align="center">
-        <div className={styles.dots}>
-          {lesson.exercises.map((ex, idx) => {
-            const isCurrent = idx === currentIdx
-            const isDone = resolved.has(ex.id)
-            const isRetry = retries.has(ex.id) && !isDone
-            const className = [
-              styles.dot,
-              isCurrent ? styles.dotActive : null,
-              !isCurrent && isDone ? styles.dotCorrect : null,
-              !isCurrent && !isDone && isRetry ? styles.dotNeedsRetry : null,
-            ]
-              .filter(Boolean)
-              .join(' ')
-            return <span key={ex.id} className={className} aria-hidden="true" />
-          })}
-        </div>
-      </Row>
-
       {mcp.scenario && <div className={styles.scenario}>{mcp.scenario}</div>}
+      <LessonImage
+        src={mcp.scenarioImageUrl}
+        variant="scenario"
+        alt={mcp.scenario ?? mcp.question}
+      />
       <p className={styles.question}>{mcp.question}</p>
 
       <div className={styles.choices} style={{ position: 'relative' }}>
@@ -270,7 +264,11 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
               disabled={feedback !== null}
             >
               <span className={styles.choiceContent}>
-                <span className={styles.choiceIcon}>{String.fromCharCode(65 + i)}</span>
+                {c.imageUrl ? (
+                  <LessonImage src={c.imageUrl} variant="choice" alt={c.text} />
+                ) : (
+                  <span className={styles.choiceIcon}>{String.fromCharCode(65 + i)}</span>
+                )}
                 <span className={styles.choiceText}>{c.text}</span>
               </span>
             </button>
@@ -320,6 +318,11 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
                     : t('lessonPlayer.wrongTitle')}
                 </div>
                 <div className={styles.feedbackBody}>{feedback.consequence}</div>
+                <LessonImage
+                  src={mcp.choices.find((c) => c.id === feedback.chosenChoiceId)?.consequenceImageUrl}
+                  variant="consequence"
+                  alt={feedback.consequence}
+                />
                 {feedback.kind === 'wrong' && (
                   <>
                     <div className={styles.feedbackNote}>{t('lessonPlayer.theRightAnswer')}</div>

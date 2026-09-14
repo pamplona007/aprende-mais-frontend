@@ -1,0 +1,299 @@
+{
+  "meta": {
+    "styleGuide": "Flat vector icon illustration on a pure white background. Bold, clean outlines, minimal color blocks, no 3D shading, no gradients, no shadows, no realistic textures. Modern flat-design style like a polished mobile-app icon or pictogram. Limited soft pastel palette: aqua #7DD3F0, soft green #95D9B6, warm yellow #FCD37A, soft coral #FFB0A8, soft blue #B5C9E8, deep coral #E55934 (warning), deep green #58CC02 (success), white, soft gray #E8EEF5. Each image shows ONE clear, recognizable object or scene. No people, no children, no characters, no faces, no hands with fingers (hands must be simple mitten silhouettes). No text, no labels, no words. CRITICAL: NO checkmarks, NO X marks, NO warning circles, NO evaluation symbols, NO badges, NO thumbs-up, NO stars, NO plus or minus signs anywhere in any image. The UI overlays the verdict (correct/wrong) on top, so the images must stay neutral. Subject centered, generous padding around it, square or 16:9 framing.",
+    "model": "image-01",
+    "aspect_ratios": {
+      "scenario": "16:9",
+      "choice_icon": "1:1",
+      "consequence": "1:1"
+    },
+    "output_dir": "public/images/exercises"
+  },
+  "prompts": [
+    {
+      "id": "ex-coz-1-scenario",
+      "exercise_id": "ex-coz-1",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A single red cooking pot with steam wisps rising from it, sitting on a blue stove burner. Bold clean outlines, soft pastel colors (aqua, soft green, warm yellow), no 3D shading, no gradients, no shadows. Single centered composition."
+    },
+    {
+      "id": "ex-coz-1-choice-bare-hands",
+      "exercise_id": "ex-coz-1",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simplified hand silhouette (mitten-shape, no fingers) reaching toward a small red pot. Bold clean outlines, soft coral and red palette, no 3D shading. Single centered composition. The image must be a pure object depiction only — do not draw any symbols, badges, marks, or icons of any kind overlaid on or near the objects."
+    },
+    {
+      "id": "ex-coz-1-choice-cloth",
+      "exercise_id": "ex-coz-1",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single yellow oven mitt folded into a simple mitten shape, centered. Bold clean outlines, warm yellow palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-1-choice-wait",
+      "exercise_id": "ex-coz-1",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simple clock icon with hands at a waiting position, with two small wavy steam lines beside it. Bold clean outlines, aqua and soft blue palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-1-consequence-bare-hands",
+      "exercise_id": "ex-coz-1",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simplified hand silhouette (mitten-shape, no fingers) with a deep coral red circular burn mark in the center of the palm. Two small red pain lines radiate from the mark. Bold clean outlines, soft coral and deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-1-consequence-cloth",
+      "exercise_id": "ex-coz-1",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single yellow cloth or oven mitt wrapping the handle of a red cooking pot. Bold clean outlines, warm yellow and red palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-1-consequence-wait",
+      "exercise_id": "ex-coz-1",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simple clock icon with hands showing a waiting position, beside a small red pot with a single calm steam wisp. Bold clean outlines, aqua and soft blue palette, no 3D shading. Single centered composition."
+    },
+
+    {
+      "id": "ex-coz-2-scenario",
+      "exercise_id": "ex-coz-2",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A single sharp kitchen knife lying on a wooden cutting board next to a single red apple. Bold clean outlines, warm yellow and soft green palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-2-choice-grab-by-blade",
+      "exercise_id": "ex-coz-2",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single sharp kitchen knife shown with its blade pointing forward and the handle to the side, the blade highlighted in soft coral to indicate the cutting edge. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-2-choice-grab-by-handle",
+      "exercise_id": "ex-coz-2",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single kitchen knife shown by its dark wooden handle with the blade to the side. Bold clean outlines, warm yellow and soft brown palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-2-choice-play",
+      "exercise_id": "ex-coz-2",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single kitchen knife tilted at a playful angle as if being waved, with motion lines around it. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-2-consequence-grab-by-blade",
+      "exercise_id": "ex-coz-2",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single sharp knife blade with a small deep coral red cut mark and a single deep coral red drop. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-2-consequence-grab-by-handle",
+      "exercise_id": "ex-coz-2",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single kitchen knife standing safely upright in a simple cutting board. Bold clean outlines, warm yellow and soft green palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-2-consequence-play",
+      "exercise_id": "ex-coz-2",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single kitchen knife placed safely down flat on a surface next to a red apple. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition."
+    },
+
+    {
+      "id": "ex-coz-3-scenario",
+      "exercise_id": "ex-coz-3",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A single stove burner with small wavy yellow-green gas haze wisps rising from it, suggesting a gas leak. A small open window with aqua breeze lines is in the background. Bold clean outlines, muted yellow-green and aqua palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-3-choice-light-match",
+      "exercise_id": "ex-coz-3",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single lit match with a small flame, held against a yellow-green gas haze background. Bold clean outlines, warm yellow and deep coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-3-choice-open-window",
+      "exercise_id": "ex-coz-3",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single open window with aqua breeze lines flowing inward through the frame. Bold clean outlines, aqua and soft blue palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-3-choice-turn-on-light",
+      "exercise_id": "ex-coz-3",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single light switch icon with a small electric spark next to a yellow-green gas haze. Bold clean outlines, soft yellow and deep coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-3-consequence-light-match",
+      "exercise_id": "ex-coz-3",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single sharp starburst explosion shape in deep coral red with a small flame in the center, indicating gas explosion. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-3-consequence-open-window",
+      "exercise_id": "ex-coz-3",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single open window with aqua breeze lines and small green leaf shapes flowing inward. Bold clean outlines, aqua and soft green palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-3-consequence-turn-on-light",
+      "exercise_id": "ex-coz-3",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single light bulb icon with a small deep coral red spark crackling from its base. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+
+    {
+      "id": "ex-coz-4-scenario",
+      "exercise_id": "ex-coz-4",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A single electrical appliance (a blender) lying half-submerged in aqua water in a sink, with its cord trailing toward a wall outlet. Bold clean outlines, aqua and soft gray palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-4-choice-grab-it",
+      "exercise_id": "ex-coz-4",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single deep coral red lightning bolt icon crackling over a small aqua water drop. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-4-choice-unplug",
+      "exercise_id": "ex-coz-4",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single wall electrical outlet with a small toggle switch in the on position. Bold clean outlines, soft gray and soft blue palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-4-consequence-grab-it",
+      "exercise_id": "ex-coz-4",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single bold deep coral red lightning bolt crackling through a small aqua water drop. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-4-consequence-unplug",
+      "exercise_id": "ex-coz-4",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single wall outlet with the toggle switch in the off position. Bold clean outlines, soft gray palette, no 3D shading. Single centered composition."
+    },
+
+    {
+      "id": "ex-coz-5-scenario",
+      "exercise_id": "ex-coz-5",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A row of three simple cleaning product bottles in different colors (soft coral, aqua, warm yellow) standing in a row on a simple surface. Bold clean outlines, soft pastel palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-5-choice-drink",
+      "exercise_id": "ex-coz-5",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single soft coral cleaning product bottle with a rounded shape and simple label area. Bold clean outlines, soft coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-5-choice-mix-cleaners",
+      "exercise_id": "ex-coz-5",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. Two simple cleaning bottles (one soft coral, one aqua) tilted toward each other with a small green gas cloud forming between them. Bold clean outlines, soft pastel palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-5-choice-ask-adult",
+      "exercise_id": "ex-coz-5",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simple adult icon (only a tall simplified torso in yellow cleaning gloves and apron, no face, no head) standing next to a cleaning bottle. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-5-consequence-drink",
+      "exercise_id": "ex-coz-5",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single soft coral cleaning product bottle with a deep coral red skull-and-crossbones symbol overlaid on it. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-5-consequence-mix-cleaners",
+      "exercise_id": "ex-coz-5",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single bold green toxic gas cloud shape with deep coral red radiating rays. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-5-consequence-ask-adult",
+      "exercise_id": "ex-coz-5",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simple adult icon (only torso and yellow-gloved hands, no face, no head) safely using a cleaning product. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition."
+    },
+
+    {
+      "id": "ex-coz-6-scenario",
+      "exercise_id": "ex-coz-6",
+      "type": "scenario",
+      "aspect_ratio": "16:9",
+      "prompt": "Flat vector icon illustration on a pure white background. A single frying pan on a stove burner with small deep coral red flame shapes rising from inside the pan. Bold clean outlines, soft coral and aqua palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-6-choice-water",
+      "exercise_id": "ex-coz-6",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single aqua water droplet shape. Bold clean outlines, aqua palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-6-choice-lid",
+      "exercise_id": "ex-coz-6",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single simple frying pan lid shape (a flat circle with a small knob handle on top). Bold clean outlines, warm yellow and soft gray palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-6-choice-run",
+      "exercise_id": "ex-coz-6",
+      "type": "choice_icon",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single pair of simple running footprint icons with motion lines behind them. Bold clean outlines, warm yellow and soft blue palette, no 3D shading. Single centered composition. No checkmarks, no X marks, no warning symbols."
+    },
+    {
+      "id": "ex-coz-6-consequence-water",
+      "exercise_id": "ex-coz-6",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single sharp starburst explosion shape in deep coral red. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-6-consequence-lid",
+      "exercise_id": "ex-coz-6",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single frying pan with a lid on top covering the flames. Bold clean outlines, warm yellow and soft coral palette, no 3D shading. Single centered composition."
+    },
+    {
+      "id": "ex-coz-6-consequence-run",
+      "exercise_id": "ex-coz-6",
+      "type": "consequence",
+      "aspect_ratio": "1:1",
+      "prompt": "Flat vector icon illustration on a pure white background. A single bold deep coral red flame shape with surrounding flame tongues spreading outward. Bold clean outlines, deep coral palette, no 3D shading. Single centered composition."
+    }
+  ]
+}

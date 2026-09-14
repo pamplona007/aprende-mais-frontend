@@ -71,6 +71,10 @@ export interface Choice {
   text: string;
   consequence: string;
   correct: boolean;
+  /** Optional illustration URL for the choice button (square 1:1). */
+  imageUrl?: string;
+  /** Optional illustration URL for the consequence of picking this choice. */
+  consequenceImageUrl?: string;
 }
 
 export interface MultipleChoicePayload {
@@ -78,6 +82,8 @@ export interface MultipleChoicePayload {
   scenario?: string;
   question: string;
   choices: Choice[];
+  /** Optional illustration URL for the scenario (landscape 16:9). */
+  scenarioImageUrl?: string;
 }
 
 export interface Exercise {
