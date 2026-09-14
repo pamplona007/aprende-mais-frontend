@@ -49,7 +49,6 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
   const [currentIdx, setCurrentIdx] = useState(0)
   const [feedback, setFeedback] = useState<Feedback>(null)
   const [confettiKey, setConfettiKey] = useState(0)
-  const [completionStart, setCompletionStart] = useState<number | null>(null)
   const exitClickedRef = useRef(false)
   // Refs mirror the state so timeouts can read the latest values without
   // stale closure issues.
@@ -69,7 +68,6 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
   useEffect(() => {
     if (lesson.exercises.length > 0 && resolved.size === lesson.exercises.length) {
       markLessonComplete()
-      setCompletionStart((s) => s ?? Date.now())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resolved.size])
@@ -139,7 +137,8 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
         return
       }
     }
-    // Otherwise everything is resolved — CompleteScreen renders next tick.
+    // Nothing left to do — mark the lesson complete so CompleteScreen renders.
+    setCompleted(true)
   }
 
   const onContinue = () => {
@@ -177,9 +176,32 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
     return pieces
   }, [confettiKey])
 
+  // Once advance() confirms there's nothing left to ask, it sets this to
+  // true so the next render shows CompleteScreen instead of the question.
+  const [completed, setCompleted] = useState(false)
+
+  if (
+    lesson.exercises.length > 0 &&
+    completed
+  ) {
+    return (
+      <CompleteScreen
+        lesson={lesson}
+        firstAttemptWrong={firstAttemptWrong}
+        onComplete={onComplete}
+      />
+    )
+  }
+
   if (!currentEntry || !currentExercise || !mcp) {
     // No more tour entries to render — show complete screen.
-    return <CompleteScreen lesson={lesson} onComplete={onComplete} />
+    return (
+      <CompleteScreen
+        lesson={lesson}
+        firstAttemptWrong={firstAttemptWrong}
+        onComplete={onComplete}
+      />
+    )
   }
 
   return (
@@ -322,40 +344,103 @@ export function LessonPlayer({ lesson, onComplete, onExit }: LessonPlayerProps) 
 
 function CompleteScreen({
   lesson,
+  firstAttemptWrong,
   onComplete,
 }: {
   lesson: Lesson
+  firstAttemptWrong: Set<string>
   onComplete: () => void
 }) {
   const { t } = useTranslation()
-  const stars = lesson.score >= 100 ? 3 : lesson.score >= 75 ? 2 : lesson.score >= 50 ? 1 : 0
+
+  // First-attempt correctness is what defines the score and stars.
+  const total = lesson.exercises.length
+  const correctFirstTry = total - firstAttemptWrong.size
+  const percent = total === 0 ? 0 : Math.round((correctFirstTry / total) * 100)
+  const stars = percent >= 100 ? 3 : percent >= 75 ? 2 : percent >= 50 ? 1 : 0
+
+  // Time spent on this single lesson session. Captured once on mount so
+  // oxlint's purity rule is happy (Date.now is impure).
+  const [mountTime] = useState(() => Date.now())
+  const startedMs = new Date(lesson.startedAt).getTime()
+  const elapsedMs = Math.max(0, mountTime - startedMs)
+
+  // Headline copy based on performance.
+  const headline =
+    percent >= 100
+      ? t('lessonPlayer.perfect')
+      : percent >= 75
+        ? t('lessonPlayer.great')
+        : percent >= 50
+          ? t('lessonPlayer.good')
+          : t('lessonPlayer.keepGoing')
+
+  // Animated count-up for the score number.
+  const [displayedScore, setDisplayedScore] = useState(0)
+  useEffect(() => {
+    let raf: number
+    const start = performance.now()
+    const duration = 1000
+    const tick = (now: number) => {
+      const t01 = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - t01, 3)
+      setDisplayedScore(Math.round(eased * correctFirstTry))
+      if (t01 < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [correctFirstTry])
+
+  // Continuous celebration confetti: emit a small batch every 1.4s for ~6s.
+  const [confettiBurst, setConfettiBurst] = useState(0)
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setConfettiBurst((b) => b + 1)
+    }, 1400)
+    const stop = window.setTimeout(() => window.clearInterval(id), 6500)
+    return () => {
+      window.clearInterval(id)
+      window.clearTimeout(stop)
+    }
+  }, [])
 
   const confettiColors = useMemo(
     () => ['#58cc02', '#1cb0f6', '#ffc800', '#ce82ff', '#ff4b4b', '#ff9600'],
     [],
   )
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: 30 }, (_, i) => ({
-        id: i,
-        color: confettiColors[i % confettiColors.length] ?? '#58cc02',
-        left: jitter(100),
-        top: -10 - jitter(30),
-        dx: jitterOffset(200),
-        dy: 400 + jitter(200),
-        rot: jitter(1440) - 720,
-        delay: jitter(800),
-      })),
-    [confettiColors],
-  )
+
+  function buildPieces(seed: number) {
+    return Array.from({ length: 22 }, (_, i) => ({
+      id: `${seed}-${i}`,
+      color: confettiColors[i % confettiColors.length] ?? '#58cc02',
+      left: jitter(100),
+      top: -8 - jitter(20),
+      dx: jitterOffset(160),
+      dy: 380 + jitter(160),
+      rot: jitter(1440) - 720,
+      delay: jitter(500),
+    }))
+  }
+
+  // Confetti pieces are recomputed whenever the burst key changes (the key
+  // increments each interval tick). Using a key-based remount means we don't
+  // need a separate state mirror or an effect — the pieces are derived
+  // directly from the burst counter.
+  const confettiKeyForBurst = confettiBurst > 0 ? confettiBurst : 0
 
   return (
     <div
       className={styles.complete}
       style={{ ['--subject-color' as string]: lesson.subjectColor }}
     >
-      <div className={styles.completeConfetti} aria-hidden="true">
-        {pieces.map((p) => (
+      <div className={styles.completeBackdropRays} aria-hidden="true" />
+
+      <div
+        className={styles.completeConfetti}
+        aria-hidden="true"
+        key={confettiKeyForBurst}
+      >
+        {buildPieces(confettiKeyForBurst).map((p) => (
           <span
             key={p.id}
             className={styles.completeConfettiDot}
@@ -372,28 +457,66 @@ function CompleteScreen({
         ))}
       </div>
 
-      <div className={styles.completeStars}>
+      <div className={styles.completeTrophy} aria-hidden="true">
+        {stars === 3 ? '🏆' : stars === 2 ? '🎉' : stars === 1 ? '👏' : '💪'}
+      </div>
+      <div className={styles.completeTitle}>{t('lessonPlayer.completeTitle')}</div>
+      <div
+        className={styles.completeHeadline}
+        style={{ color: lesson.subjectColor }}
+      >
+        {headline}
+      </div>
+
+      <div className={styles.completeStars} aria-hidden="true">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
             className={i < stars ? styles.completeStarOn : styles.completeStarOff}
-            aria-hidden="true"
           >
             ★
           </span>
         ))}
       </div>
-      <div className={styles.completeTitle}>{t('lessonPlayer.completeTitle')}</div>
-      <div className={styles.completeBody}>{t('lessonPlayer.completeBody')}</div>
-      <div className={styles.completeScore}>{lesson.score}%</div>
-      <div className={styles.completeStarsText}>
-        {t('lessonPlayer.starsEarned', { count: stars })}
+
+      <div className={styles.completeScoreWrap}>
+        <div className={styles.completeScoreLabel}>
+          {t('lessonPlayer.scoreLabel')}
+        </div>
+        <div className={styles.completeScoreValue}>
+          <span className={styles.completeScoreCount}>{displayedScore}</span>
+          <span className={styles.completeScoreSlash}>/</span>
+          <span className={styles.completeScoreTotal}>{total}</span>
+        </div>
+        <div className={styles.completeScorePercent}>{percent}%</div>
       </div>
+
+      <div className={styles.completeTimeWrap}>
+        <span className={styles.completeTimeIcon} aria-hidden="true">
+          ⏱
+        </span>
+        <span>{t('lessonPlayer.timeSpent')}:</span>
+        <span className={styles.completeTimeValue}>
+          {formatDuration(elapsedMs)}
+        </span>
+      </div>
+
       <div className={styles.completeActions}>
-        <Button onClick={onComplete} aria-label={t('lessonPlayer.backToJourney')}>
+        <Button
+          className={styles.completeActionBtn}
+          onClick={onComplete}
+          aria-label={t('lessonPlayer.backToJourney')}
+        >
           <Icon name="arrow-left" size={18} />
         </Button>
       </div>
     </div>
   )
+}
+
+function formatDuration(ms: number): string {
+  const totalSec = Math.floor(ms / 1000)
+  const m = Math.floor(totalSec / 60)
+  const s = totalSec % 60
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
 }
