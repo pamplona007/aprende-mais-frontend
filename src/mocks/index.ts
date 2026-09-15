@@ -803,6 +803,10 @@ for (const exercise of mockExercises) {
 }
 
 // ─── Lesson history for Ana (some completed, one in progress) ────────
+// Status per exercise reflects what the student actually did:
+//   CORRECT            → got it right first try
+//   FAILED_THEN_CORRECT → got it wrong, then answered correctly on retry
+//   PENDING             → still working on it
 export const mockLessons: Lesson[] = [
   {
     id: 'les-1',
@@ -813,14 +817,14 @@ export const mockLessons: Lesson[] = [
     status: 'COMPLETED',
     score: 100,
     totalCount: 5,
-    startedAt: daysAgo(5),
-    completedAt: daysAgo(5),
+    startedAt: daysAgo(14),
+    completedAt: daysAgo(14),
     exercises: [
-      { id: 'le-1', exerciseId: 'ex-coz-1', orderIndex: 0, status: 'CORRECT' },
-      { id: 'le-2', exerciseId: 'ex-coz-2', orderIndex: 1, status: 'CORRECT' },
-      { id: 'le-3', exerciseId: 'ex-coz-3', orderIndex: 2, status: 'CORRECT' },
-      { id: 'le-4', exerciseId: 'ex-coz-4', orderIndex: 3, status: 'CORRECT' },
-      { id: 'le-5', exerciseId: 'ex-coz-5', orderIndex: 4, status: 'CORRECT' },
+      { id: 'le-1', exerciseId: 'ex-coz-1', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'cloth' },
+      { id: 'le-2', exerciseId: 'ex-coz-2', orderIndex: 1, status: 'CORRECT', chosenChoiceId: 'grab-by-handle' },
+      { id: 'le-3', exerciseId: 'ex-coz-3', orderIndex: 2, status: 'CORRECT', chosenChoiceId: 'open-window' },
+      { id: 'le-4', exerciseId: 'ex-coz-4', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'unplug' },
+      { id: 'le-5', exerciseId: 'ex-coz-5', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'ask-adult' },
     ],
   },
   {
@@ -832,18 +836,37 @@ export const mockLessons: Lesson[] = [
     status: 'COMPLETED',
     score: 80,
     totalCount: 5,
-    startedAt: daysAgo(3),
-    completedAt: daysAgo(3),
+    startedAt: daysAgo(11),
+    completedAt: daysAgo(11),
     exercises: [
-      { id: 'le-6', exerciseId: 'ex-coz-6', orderIndex: 0, status: 'CORRECT' },
-      { id: 'le-7', exerciseId: 'ex-coz-1', orderIndex: 1, status: 'CORRECT' },
-      { id: 'le-8', exerciseId: 'ex-coz-2', orderIndex: 2, status: 'CORRECT' },
-      { id: 'le-9', exerciseId: 'ex-coz-3', orderIndex: 3, status: 'FAILED_THEN_CORRECT' },
-      { id: 'le-10', exerciseId: 'ex-coz-4', orderIndex: 4, status: 'CORRECT' },
+      { id: 'le-6', exerciseId: 'ex-coz-6', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'lid' },
+      { id: 'le-7', exerciseId: 'ex-coz-1', orderIndex: 1, status: 'CORRECT', chosenChoiceId: 'cloth' },
+      { id: 'le-8', exerciseId: 'ex-coz-2', orderIndex: 2, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'grab-by-blade' },
+      { id: 'le-9', exerciseId: 'ex-coz-3', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'open-window' },
+      { id: 'le-10', exerciseId: 'ex-coz-4', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'unplug' },
     ],
   },
   {
     id: 'les-3',
+    studentId: 's_ana',
+    subjectId: 'sub-cozinha',
+    subjectTitle: 'Cozinha',
+    subjectColor: '#58cc02',
+    status: 'COMPLETED',
+    score: 60,
+    totalCount: 5,
+    startedAt: daysAgo(8),
+    completedAt: daysAgo(8),
+    exercises: [
+      { id: 'le-21', exerciseId: 'ex-coz-1', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'cloth' },
+      { id: 'le-22', exerciseId: 'ex-coz-2', orderIndex: 1, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'play' },
+      { id: 'le-23', exerciseId: 'ex-coz-3', orderIndex: 2, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'light-match' },
+      { id: 'le-24', exerciseId: 'ex-coz-4', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'unplug' },
+      { id: 'le-25', exerciseId: 'ex-coz-5', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'ask-adult' },
+    ],
+  },
+  {
+    id: 'les-4',
     studentId: 's_ana',
     subjectId: 'sub-rua',
     subjectTitle: 'Rua',
@@ -851,18 +874,56 @@ export const mockLessons: Lesson[] = [
     status: 'COMPLETED',
     score: 100,
     totalCount: 5,
-    startedAt: daysAgo(2),
-    completedAt: daysAgo(2),
+    startedAt: daysAgo(6),
+    completedAt: daysAgo(6),
     exercises: [
-      { id: 'le-11', exerciseId: 'ex-rua-1', orderIndex: 0, status: 'CORRECT' },
-      { id: 'le-12', exerciseId: 'ex-rua-2', orderIndex: 1, status: 'CORRECT' },
-      { id: 'le-13', exerciseId: 'ex-rua-3', orderIndex: 2, status: 'CORRECT' },
-      { id: 'le-14', exerciseId: 'ex-rua-4', orderIndex: 3, status: 'CORRECT' },
-      { id: 'le-15', exerciseId: 'ex-rua-5', orderIndex: 4, status: 'CORRECT' },
+      { id: 'le-11', exerciseId: 'ex-rua-1', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'say-no-walk' },
+      { id: 'le-12', exerciseId: 'ex-rua-2', orderIndex: 1, status: 'CORRECT', chosenChoiceId: 'say-no-walk' },
+      { id: 'le-13', exerciseId: 'ex-rua-3', orderIndex: 2, status: 'CORRECT', chosenChoiceId: 'stay-put' },
+      { id: 'le-14', exerciseId: 'ex-rua-4', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'wait' },
+      { id: 'le-15', exerciseId: 'ex-rua-5', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'crosswalk' },
     ],
   },
   {
-    id: 'les-4',
+    id: 'les-5',
+    studentId: 's_ana',
+    subjectId: 'sub-rua',
+    subjectTitle: 'Rua',
+    subjectColor: '#1cb0f6',
+    status: 'COMPLETED',
+    score: 80,
+    totalCount: 5,
+    startedAt: daysAgo(4),
+    completedAt: daysAgo(4),
+    exercises: [
+      { id: 'le-26', exerciseId: 'ex-rua-1', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'say-no-walk' },
+      { id: 'le-27', exerciseId: 'ex-rua-2', orderIndex: 1, status: 'CORRECT', chosenChoiceId: 'say-no-walk' },
+      { id: 'le-28', exerciseId: 'ex-rua-3', orderIndex: 2, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'wander' },
+      { id: 'le-29', exerciseId: 'ex-rua-4', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'wait' },
+      { id: 'le-30', exerciseId: 'ex-rua-5', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'crosswalk' },
+    ],
+  },
+  {
+    id: 'les-6',
+    studentId: 's_ana',
+    subjectId: 'sub-escola',
+    subjectTitle: 'Escola',
+    subjectColor: '#ce82ff',
+    status: 'COMPLETED',
+    score: 60,
+    totalCount: 5,
+    startedAt: daysAgo(2),
+    completedAt: daysAgo(2),
+    exercises: [
+      { id: 'le-31', exerciseId: 'ex-esc-1', orderIndex: 0, status: 'CORRECT', chosenChoiceId: 'sit' },
+      { id: 'le-32', exerciseId: 'ex-esc-2', orderIndex: 1, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'suffer' },
+      { id: 'le-33', exerciseId: 'ex-esc-3', orderIndex: 2, status: 'FAILED_THEN_CORRECT', chosenChoiceId: 'hide' },
+      { id: 'le-34', exerciseId: 'ex-esc-4', orderIndex: 3, status: 'CORRECT', chosenChoiceId: 'ignore-walk' },
+      { id: 'le-35', exerciseId: 'ex-esc-5', orderIndex: 4, status: 'CORRECT', chosenChoiceId: 'tell-adult' },
+    ],
+  },
+  {
+    id: 'les-7',
     studentId: 's_ana',
     subjectId: 'sub-rua',
     subjectTitle: 'Rua',
@@ -981,6 +1042,7 @@ export function mockSubmitAnswer(
     : 'PENDING'
 
   entry.status = newStatus
+  entry.chosenChoiceId = choiceId
 
   const open = lesson.exercises.filter((e) => e.status === 'PENDING').length
   let lessonComplete = false
@@ -1053,6 +1115,10 @@ export function getSubjectById(id: string): Subject | undefined {
 
 export function getExercisesForSubject(subjectId: string): Exercise[] {
   return mockExercises.filter((e) => e.subjectId === subjectId)
+}
+
+export function getExerciseById(exerciseId: string): Exercise | undefined {
+  return mockExercises.find((e) => e.id === exerciseId)
 }
 
 export function getLessonsForStudent(studentId: string): Lesson[] {

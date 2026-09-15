@@ -93,13 +93,15 @@ export interface Exercise {
   payload: MultipleChoicePayload;
 }
 
-export type LessonExerciseStatus = 'PENDING' | 'CORRECT' | 'FAILED_THEN_CORRECT';
+export type LessonExerciseStatus = 'PENDING' | 'CORRECT' | 'FAILED_THEN_CORRECT'
 
 export interface LessonExercise {
-  id: string;
-  exerciseId: string;
-  orderIndex: number;
-  status: LessonExerciseStatus;
+  id: string
+  exerciseId: string
+  orderIndex: number
+  status: LessonExerciseStatus
+  /** Choice the student picked (always set for CORRECT / FAILED_THEN_CORRECT). */
+  chosenChoiceId?: string
 }
 
 export type LessonStatus = 'IN_PROGRESS' | 'COMPLETED';
